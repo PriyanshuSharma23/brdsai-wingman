@@ -53,11 +53,20 @@ const Auth = () => {
         priority
       />
 
-      <Image src={"/Logo.png"} alt={"brds"} width={273} height={78}  className="pt-20"/>
+      <Image
+        src={"/Logo.png"}
+        alt={"brds"}
+        width={273}
+        height={78}
+        className="pt-20"
+      />
 
       <Switch loginState={loginState} setLoginState={setLoginState} />
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 container max-w-lg flex flex-col flex-1 ">
+        <form
+          onSubmit={form.handleSubmit(onSubmit)}
+          className="space-y-4 container max-w-lg flex flex-col flex-1 "
+        >
           <FormField
             control={form.control}
             name="email"
@@ -94,8 +103,7 @@ const Auth = () => {
             </Button>
           </div>
 
-          <div className="flex-1">
-          </div>
+          <div className="flex-1"></div>
 
           <div className="space-y-2">
             <Button className="bg-blu rounded-full w-full hover:bg-blu hover:brightness-110 transition-all text-base">

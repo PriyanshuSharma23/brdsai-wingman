@@ -75,3 +75,9 @@
     @apply bg-background text-foreground;
   }
 }
+
+.mic-shadow {
+  -webkit-box-shadow: 0px 0px 24px 1px rgba(3,88,121,1);
+  -moz-box-shadow: 0px 0px 24px 1px rgba(3,88,121,1);
+  box-shadow: 0px 0px 24px 1px rgba(3,88,121,1);
+}
