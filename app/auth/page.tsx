@@ -34,21 +34,30 @@ const Auth = () => {
   function onSubmit(values: z.infer<typeof formSchema>) {}
 
   return (
-    <main className="relative">
+    <main className="relative flex flex-col justify-center items-center space-y-8 h-screen py-20">
       <Image
         src={"/onboarding-fig-1.png"}
         alt="onboarding figure 1"
         width={290}
         height={343}
-        className="w-2/3 -translate-y-1/2 absolute -z-50"
+        className="w-2/3 top-0 left-0 -translate-y-1/2  fixed -z-50 max-w-md"
         priority
       />
 
-      <Image src={"/Logo.png"} alt={"brds"} width={273} height={78} />
+      <Image
+        src={"/onboarding-fig-2.png"}
+        alt="onboarding figure 2"
+        width={245.5}
+        height={180.7}
+        className=" bottom-20 md:bottom-10 right-0   fixed -z-50 max-w-md"
+        priority
+      />
+
+      <Image src={"/Logo.png"} alt={"brds"} width={273} height={78}  className="pt-20"/>
 
       <Switch loginState={loginState} setLoginState={setLoginState} />
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 container max-w-lg flex flex-col flex-1 ">
           <FormField
             control={form.control}
             name="email"
@@ -84,6 +93,25 @@ const Auth = () => {
               Forgot Password?
             </Button>
           </div>
+
+          <div className="flex-1">
+          </div>
+
+          <div className="space-y-2">
+            <Button className="bg-blu rounded-full w-full hover:bg-blu hover:brightness-110 transition-all text-base">
+              {loginState === "login" ? "Login" : "Sign Up"}
+            </Button>
+            <Button variant={"outline"} className="gap-2 w-full rounded-full">
+              <Image
+                src={"/google-logo.png"}
+                alt={"google logo"}
+                width={100}
+                height={100}
+                className="w-5 aspect-square"
+              />
+              <span className="text-base">Continue With Google</span>
+            </Button>
+          </div>
         </form>
       </Form>
     </main>
@@ -109,14 +137,14 @@ const Switch = (props: SwitchProps) => {
   return (
     <button
       onClick={toggle}
-      className="h-8 bg-slate-100 flex max-w-max items-center text-center relative isolate rounded-full text-primary  text-sm gap-2"
+      className="h-10 bg-slate-100 flex max-w-max items-center text-center relative isolate rounded-full text-primary  text-sm gap-2 flex-shrink-0"
     >
-      <p className={cn("w-16 transition-all translate-x-1")}>Login</p>
-      <p className={cn("w-16 transition-all -translate-x-1")}>Sign Up</p>
+      <p className={cn("w-20 transition-all translate-x-1")}>Login</p>
+      <p className={cn("w-20 transition-all -translate-x-1")}>Sign Up</p>
       <div
-        className="bg-white h-6 w-16 absolute -z-10 rounded-full transition-all"
+        className="bg-white h-8 w-20 absolute -z-10 rounded-full transition-all"
         style={{
-          left: props.loginState === "login" ? "4px" : `calc(100% - 68px)`,
+          left: props.loginState === "login" ? "4px" : `calc(100% - 84px)`,
         }}
       ></div>
     </button>
