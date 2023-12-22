@@ -1,5 +1,4 @@
-import { BottomBar } from "@/components/bottom-bar";
-import { Navbar } from "@/components/nav";
+import Link from "next/link";
 import { SearchIconInput } from "@/components/ui/icon-input";
 import { Clock, Search } from "lucide-react";
 
@@ -12,11 +11,13 @@ export default function Home() {
         </h1>
         <SearchIconInput
           icon={<Search size={16} className="stroke-gray-400" />}
+          placeholder={"Search"}
         />
 
-        <div className="space-y-6 py-6">
+        <div className="space-y-4 py-6">
           {new Array(50).fill(1).map((_, i) => (
             <AudioCard
+              id={`${i}`}
               name={"Recording " + `${i + 1}`}
               duration={"10:30"}
               key={i}
@@ -24,21 +25,25 @@ export default function Home() {
           ))}
         </div>
       </div>
-      </>
+    </>
   );
 }
+
 type AudioCardProps = {
+  id: string;
   name: string;
   duration: string;
 };
 function AudioCard(props: AudioCardProps) {
   return (
-    <div className="space-y-2 p-3 border rounded-md">
-      <p>{props.name}</p>
-      <div className="flex items-center gap-1">
-        <Clock className="stroke-gray-400" size={14} />
-        <p className="text-sm text-gray-400">{props.duration}</p>
+    <Link href={"/recordings/" + props.id} className="block">
+      <div className="space-y-2 p-3 border rounded-md">
+        <p>{props.name}</p>
+        <div className="flex items-center gap-1">
+          <Clock className="stroke-gray-400" size={14} />
+          <p className="text-sm text-gray-400">{props.duration}</p>
+        </div>
       </div>
-    </div>
+    </Link>
   );
 }
