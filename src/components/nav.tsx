@@ -6,7 +6,7 @@ export const Navbar = () => {
   return (
     <NavWrapper>
       <Image
-        src={"/Logo.png"}
+        src={"/Logo-small.png"}
         alt="brds"
         width={273}
         height={78}
