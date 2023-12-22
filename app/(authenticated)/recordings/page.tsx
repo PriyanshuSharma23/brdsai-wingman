@@ -76,7 +76,7 @@ function AudioCard(props: AudioCardProps) {
           <Clock className="stroke-gray-400" size={14} />
           <p className="text-sm text-gray-400">{props.duration}</p>
         </div>
-        <button className="w-8 h-8 bg-gray-200 border rounded-full grid place-content-center">
+        <button className="w-8 h-8 bg-gray-100 border border-gray-200 rounded-full grid place-content-center">
           <Play size={18} className="text-blu translate-x-[2px]" />
         </button>
         <button>

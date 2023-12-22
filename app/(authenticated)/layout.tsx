@@ -8,7 +8,7 @@ export default function AuthenticatedLayout({
   children: ReactNode;
 }) {
   return (
-    <main className="">
+    <main className="overflow-x-hidden">
       <Navbar />
       {children}
       <BottomBar />
