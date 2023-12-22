@@ -64,7 +64,7 @@ export const BottomBar = () => {
           key={path.name}
           className={cn(
             "flex-col py-2 h-auto ",
-            pathname == key ? "text-blu hover:text-blu" : "",
+            pathname == key ? "text-blu hover:text-blu" : "text-gray-400",
           )}
           onClick={() => router.push(key)}
         >
