@@ -1,0 +1,82 @@
+/* =========================
+Custom Input range 
+=============================*/
+
+/* Input range - chrome and safari */
+
+input[type="range"] {
+  --range-progress: 0;
+  --custom-progress-height: 8px;
+  --custom-progress-background: #f1f5f9;
+  --custom-progress-border-radius: 999px;
+
+  -webkit-appearance: none;
+  position: relative;
+  background: var(--custom-progress-background);
+  width: 100%;
+  height: var(--custom-progress-height);
+  border-radius: var(--custom-progress-border-radius);
+  cursor: pointer;
+}
+
+/* Input range - firefox */
+input[type="range"]::-moz-range-track {
+  position: relative;
+  background: var(--custom-progress-background);
+  width: 100%;
+  height: var(--custom-progress-height);
+  border-radius: var(--custom-progress-border-radius);
+  cursor: pointer;
+}
+
+/* played progress length - Chrome & safari*/
+input[type="range"]::before {
+  content: "";
+  height: var(--custom-progress-height);
+  background: #035879;
+  width: var(--range-progress);
+  border-radius: var(--custom-progress-border-radius);
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+/* played progress length - firefox */
+input[type="range"]::-moz-range-progress {
+  background: #035879;
+  border-radius: var(--custom-progress-border-radius);
+  height: var(--custom-progress-border-radius);
+}
+
+/* slider thumb - chrome and safari */
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  height: 16px;
+  width: 16px;
+  border-radius: 50%;
+  border: none;
+  background-color: #035879;
+  cursor: pointer;
+  position: relative;
+}
+
+/* dragging thumb - chrome and safari */
+input[type="range"]:active::-webkit-slider-thumb {
+  transform: scale(1.2);
+}
+
+/* slider thumb - firefox */
+input[type="range"]::-moz-range-thumb {
+  height: 16px;
+  width: 16px;
+  border-radius: 50%;
+  background: #035879;
+  cursor: pointer;
+  border: transparent;
+  position: relative;
+}
+/* dragging thumb - firefox */
+input[type="range"]:active::-moz-range-thumb {
+  transform: scale(1.2);
+}
+

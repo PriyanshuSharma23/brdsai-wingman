@@ -2,8 +2,10 @@
 
 import { usePathname, useRouter } from "next/navigation";
 import { Button } from "./ui/button";
-import { FileText, Mic } from "lucide-react";
+import { Mic } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { BOTTOM_BAR_HEIGHT } from "@/lib/constants";
+import AudioPlayer from "./audio/AudioPlayer";
 
 const PATHS = {
   "/": {
@@ -57,21 +59,33 @@ export const BottomBar = () => {
   const router = useRouter();
 
   return (
-    <div className="fixed bottom-0 flex border-t justify-around w-full bg-white py-2">
-      {Object.entries(PATHS).map(([key, path]) => (
-        <Button
-          variant={"ghost"}
-          key={path.name}
-          className={cn(
-            "flex-col py-2 h-auto ",
-            pathname == key ? "text-blu hover:text-blu" : "text-gray-400",
-          )}
-          onClick={() => router.push(key)}
+    <div className="fixed bottom-0 w-full">
+      <div className="border-t bg-white  py-4 px-10 md:px-14">
+          <AudioPlayer />
+      </div>
+      <div className="border-t">
+        <div
+          className="flex container justify-between  bg-white"
+          style={{
+            height: `${BOTTOM_BAR_HEIGHT}px`,
+          }}
         >
-          {path.icon}
-          {path.name}
-        </Button>
-      ))}
+          {Object.entries(PATHS).map(([key, path]) => (
+            <Button
+              variant={"ghost"}
+              key={path.name}
+              className={cn(
+                "flex-col py-2 h-auto ",
+                pathname == key ? "text-blu hover:text-blu" : "text-gray-400",
+              )}
+              onClick={() => router.push(key)}
+            >
+              {path.icon}
+              {path.name}
+            </Button>
+          ))}
+        </div>
+      </div>
     </div>
   );
 };

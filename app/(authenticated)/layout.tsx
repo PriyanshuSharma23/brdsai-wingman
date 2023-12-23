@@ -1,6 +1,7 @@
 import { BottomBar } from "@/components/bottom-bar";
 import { Navbar } from "@/components/nav";
 import { ReactNode } from "react";
+import { Spacer } from "./spacer";
 
 export default function AuthenticatedLayout({
   children,
@@ -8,9 +9,10 @@ export default function AuthenticatedLayout({
   children: ReactNode;
 }) {
   return (
-    <main className="overflow-x-hidden">
+    <main className="">
       <Navbar />
       {children}
+      <Spacer />
       <BottomBar />
     </main>
   );

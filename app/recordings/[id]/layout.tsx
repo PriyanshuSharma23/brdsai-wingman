@@ -1,7 +1,7 @@
 "use client";
 import { ReactNode } from "react";
 import { RecordingNav } from "../recording-nav";
-import { Player } from "./player";
+import AudioPlayer from "@/components/audio/AudioPlayer";
 
 type RecordingPageParams = {
   children: ReactNode;
@@ -24,7 +24,7 @@ export default function RecordingsLayout(props: RecordingPageParams) {
         }}
       />
       {props.children}
-      <Player />
+      <AudioPlayer />
     </main>
   );
 }
