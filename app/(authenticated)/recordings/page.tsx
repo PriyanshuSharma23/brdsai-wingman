@@ -1,3 +1,4 @@
+"use client";
 import Link from "next/link";
 import { SearchIconInput } from "@/components/ui/icon-input";
 import {
@@ -9,8 +10,17 @@ import {
   SlidersHorizontal,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { ActionButton } from "@/components/action-button";
+import { useState } from "react";
+import { AddRecordingModal } from "./new-recording-modal";
 
 export default function RecordingsPage() {
+  const [modalOpen, setModalOpen] = useState(false);
+
+  const action = () => {
+    setModalOpen(true);
+  };
+
   return (
     <>
       <div className="px-4 md:px-12 xl:px-20 space-y-2 md:space-y-4 text-neutral-600 pt-6">
@@ -45,6 +55,9 @@ export default function RecordingsPage() {
           ))}
         </div>
       </div>
+
+      <ActionButton onClick={action} />
+      <AddRecordingModal open={modalOpen} onOpenChange={setModalOpen} />
     </>
   );
 }

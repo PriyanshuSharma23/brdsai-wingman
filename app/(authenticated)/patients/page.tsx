@@ -1,7 +1,11 @@
+"use client";
 import { Button } from "@/components/ui/button";
 import { SearchIconInput } from "@/components/ui/icon-input";
 import { Search, SlidersHorizontal } from "lucide-react";
 import { PatientCard } from "./patient-card";
+import { ActionButton } from "@/components/action-button";
+import { AddPatientModal } from "./patient-modal";
+import { useState } from "react";
 
 const patient = (
   <svg
@@ -21,34 +25,48 @@ const patient = (
 );
 
 const PatientsPage = () => {
+  const [modalOpen, setModalOpen] = useState(false);
+
+  const addPatient = () => {
+    setModalOpen(true);
+  };
+
   return (
-    <div className="px-4 md:px-12 xl:px-20 space-y-2 md:space-y-4 text-neutral-600 pt-6">
-      <h1
-        className="text-lg pt-5 flex items-center gap-2"
-        style={{ fontWeight: 500 }}
-      >
-        {patient}
-        <span>Your Patients</span>
-      </h1>
+    <>
+      <div className="px-4 md:px-12 xl:px-20 space-y-2 md:space-y-4 text-neutral-600 pt-6">
+        <h1
+          className="text-lg pt-5 flex items-center gap-2"
+          style={{ fontWeight: 500 }}
+        >
+          {patient}
+          <span>Your Patients</span>
+        </h1>
 
-      <div className="flex max-w-md items-center gap-2">
-        <div className="flex-1">
-          <SearchIconInput
-            icon={<Search size={16} className="stroke-gray-400" />}
-            className="w-full flex-1"
-          />
+        <div className="flex max-w-md items-center gap-2">
+          <div className="flex-1">
+            <SearchIconInput
+              icon={<Search size={16} className="stroke-gray-400" />}
+              className="w-full flex-1"
+            />
+          </div>
+          <Button className="w-11 ">
+            <SlidersHorizontal className="flex-shrink-0" size={19} />
+          </Button>
         </div>
-        <Button className="w-11 ">
-          <SlidersHorizontal className="flex-shrink-0" size={19} />
-        </Button>
-      </div>
 
-      <div className="space-y-3  py-5">
-        {new Array(50).fill(1).map((_, i) => (
-          <PatientCard name="Naman Dureja" mrn="MRN-5632-8975" key={i} />
-        ))}
+        <div className="space-y-3  py-5">
+          {new Array(50).fill(1).map((_, i) => (
+            <PatientCard name="Naman Dureja" mrn="MRN-5632-8975" key={i} />
+          ))}
+        </div>
       </div>
-    </div>
+      <ActionButton onClick={addPatient} />
+      {/* Add Patient Modal */}
+      <AddPatientModal 
+        open={modalOpen}
+        onOpenChange={setModalOpen}
+      />
+    </>
   );
 };
 

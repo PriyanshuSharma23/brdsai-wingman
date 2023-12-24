@@ -11,7 +11,7 @@ interface AudioPlayerActions {
 type AudioPlayer = AudioPlayerState & AudioPlayerActions;
 
 const initialState: AudioPlayerState = {
-  visible: false,
+  visible: true,
 };
 
 export const useAudioPlayer = create<AudioPlayer>((set, get) => ({

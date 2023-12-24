@@ -5,81 +5,82 @@ import { ChipCard } from "@/components/chip-card";
 
 export default function Home() {
   return (
-    <div className="px-4 md:px-12 xl:px-20 space-y-2 md:space-y-4 text-neutral-600 pt-6">
-      <h1 className="text-blu text-2xl font-semibold">Hi, Naman</h1>
+    <>
+      <div className="px-4 md:px-12 xl:px-20 space-y-2 md:space-y-4 text-neutral-600 pt-6">
+        <h1 className="text-blu text-2xl font-semibold">Hi, Naman</h1>
 
-      <div className="flex gap-2 items-center text-lg text-neutral-600 pt-4">
-        {patient}
-        <p>Recent Patients</p>
+        <div className="flex gap-2 items-center text-lg text-neutral-600 pt-4">
+          {patient}
+          <p>Recent Patients</p>
+        </div>
+
+        <div className="flex gap-2 overflow-x-scroll no-scrollbar">
+          {new Array(10).fill(0).map((_, idx) => {
+            return (
+              <div className="min-w-[12rem]" key={idx}>
+                <PatientCard name={"Adnan"} mrn={"MRN-5632-8975"} />
+              </div>
+            );
+          })}
+        </div>
+
+        <div className=""></div>
+
+        <Button className="rounded-full  px-10 w-full max-w-sm gap-1">
+          <span>View full list (42)</span>
+          <ArrowRight className="" size={16} />
+        </Button>
+
+        <div className="py-3 border-b border-gray-400/50"></div>
+
+        <div className="flex gap-2 items-center text-lg text-neutral-600 pt-4">
+          <Mic size={21} />
+          <p>Recordings (42)</p>
+        </div>
+
+        <div className="flex gap-2 overflow-x-scroll no-scrollbar">
+          {new Array(10).fill(0).map((_, idx) => {
+            return (
+              <div className="min-w-[12rem]" key={idx}>
+                <ChipCard
+                  titleIcon={<Mic size={15} />}
+                  title="05/23/2023 - Patient"
+                  contnetIcon={patient}
+                  content="Naman Dureja"
+                />
+              </div>
+            );
+          })}
+        </div>
+        <div className=""></div>
+
+        <Button className="rounded-full  px-10 w-full max-w-sm gap-1">
+          <span>New Recording</span>
+          <PlusIcon size={18} />
+        </Button>
+
+        <div className="py-3 border-b border-gray-400/50"></div>
+
+        <div className="flex gap-2 items-center text-lg text-neutral-600 pt-4">
+          <Note className="w-6" />
+          <p>Notes (42)</p>
+        </div>
+        <div className="flex gap-2 overflow-x-scroll no-scrollbar">
+          {new Array(10).fill(0).map((_, idx) => {
+            return (
+              <div className="min-w-[12rem]" key={idx}>
+                <ChipCard
+                  titleIcon={<Note className={"w-5"} />}
+                  title="Note Name"
+                  contnetIcon={<Mic size={16} />}
+                  content="Recording Name"
+                />
+              </div>
+            );
+          })}
+        </div>
       </div>
-
-      <div className="flex gap-2 overflow-x-scroll no-scrollbar">
-        {new Array(10).fill(0).map((_, idx) => {
-          return (
-            <div className="min-w-[12rem]" key={idx}>
-              <PatientCard name={"Adnan"} mrn={"MRN-5632-8975"} />
-            </div>
-          );
-        })}
-      </div>
-
-      <div className=""></div>
-
-      <Button className="rounded-full  px-10 w-full max-w-sm gap-1">
-        <span>View full list (42)</span>
-        <ArrowRight className="" size={16} />
-      </Button>
-
-      <div className="py-3 border-b border-gray-400/50"></div>
-
-      <div className="flex gap-2 items-center text-lg text-neutral-600 pt-4">
-        <Mic size={21} />
-        <p>Recordings (42)</p>
-      </div>
-
-      <div className="flex gap-2 overflow-x-scroll no-scrollbar">
-        {new Array(10).fill(0).map((_, idx) => {
-          return (
-            <div className="min-w-[12rem]" key={idx}>
-              <ChipCard
-                titleIcon={<Mic size={15} />}
-                title="05/23/2023 - Patient"
-                contnetIcon={patient}
-                content="Naman Dureja"
-              />
-            </div>
-          );
-        })}
-      </div>
-      <div className=""></div>
-
-      <Button className="rounded-full  px-10 w-full max-w-sm gap-1">
-        <span>New Recording</span>
-        <PlusIcon size={18} />
-      </Button>
-
-      <div className="py-3 border-b border-gray-400/50"></div>
-
-      <div className="flex gap-2 items-center text-lg text-neutral-600 pt-4">
-        <Note className="w-6"/>
-        <p>Notes (42)</p>
-      </div>
-      <div className="flex gap-2 overflow-x-scroll no-scrollbar">
-        {new Array(10).fill(0).map((_, idx) => {
-          return (
-            <div className="min-w-[12rem]" key={idx}>
-              <ChipCard
-                titleIcon={<Note className={'w-5'} />}
-                title="Note Name"
-                contnetIcon={<Mic size={16} />}
-                content="Recording Name"
-              />
-            </div>
-          );
-        })}
-      </div>
-      <div className="md:pb-24"></div>
-    </div>
+    </>
   );
 }
 

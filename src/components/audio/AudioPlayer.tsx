@@ -44,9 +44,6 @@ const AudioPlayer = () => {
       />
       <div
         className="audio-player"
-        style={{
-          height: `${AUDIO_PLAYER_HEIGHT}px`,
-        }}
       >
         <div className="flex  gap-2 md:container">
           <Controls
@@ -67,4 +64,5 @@ const AudioPlayer = () => {
     </>
   );
 };
+
 export default AudioPlayer;

@@ -4,8 +4,9 @@ import { usePathname, useRouter } from "next/navigation";
 import { Button } from "./ui/button";
 import { Mic } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { BOTTOM_BAR_HEIGHT } from "@/lib/constants";
+import { AUDIO_PLAYER_HEIGHT, BOTTOM_BAR_HEIGHT } from "@/lib/constants";
 import AudioPlayer from "./audio/AudioPlayer";
+import { useAudioPlayer } from "@/state/global-audio-player";
 
 const PATHS = {
   "/": {
@@ -57,12 +58,20 @@ const PATHS = {
 export const BottomBar = () => {
   const pathname = usePathname();
   const router = useRouter();
+  const { visible } = useAudioPlayer();
 
   return (
     <div className="fixed bottom-0 w-full">
-      <div className="border-t bg-white  py-4 px-10 md:px-14">
+      {visible && (
+        <div
+          className="border-t bg-white py-4 px-10 md:px-14 "
+          style={{
+            height: `${AUDIO_PLAYER_HEIGHT}px`,
+          }}
+        >
           <AudioPlayer />
-      </div>
+        </div>
+      )}
       <div className="border-t">
         <div
           className="flex container justify-between  bg-white"
