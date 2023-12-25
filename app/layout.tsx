@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
+import 'regenerator-runtime/runtime'
 import './globals.css'
 import './custom-progress-bar.css'
 
