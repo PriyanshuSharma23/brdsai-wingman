@@ -9,7 +9,11 @@ export const RecordNav = (props: RecordNavProps) => {
   const router = useRouter();
 
   const back = () => {
-    router.back();
+    if (window.history.length > 1) {
+      router.back();
+    } else {
+      router.push("/recordings");
+    }
   };
 
   return (
