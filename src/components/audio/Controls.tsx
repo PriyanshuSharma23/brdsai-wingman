@@ -15,7 +15,7 @@ interface ControlsProps {
   setTimeProgress: Dispatch<SetStateAction<number>>;
   isPlaying: boolean;
   setIsPlaying: Dispatch<SetStateAction<boolean>>;
-  durationLoadedRef: RefObject<boolean>;
+  durationLoaded: boolean;
 }
 
 const Controls = ({
@@ -25,7 +25,7 @@ const Controls = ({
   setTimeProgress,
   isPlaying,
   setIsPlaying,
-  durationLoadedRef,
+  durationLoaded,
 }: ControlsProps) => {
   const togglePlayPause = () => {
     setIsPlaying((prev) => !prev);
@@ -38,20 +38,26 @@ const Controls = ({
     setTimeProgress(currentTime);
 
     if (progressBarRef.current) {
-      if (durationLoadedRef.current) {
-      progressBarRef.current.value = currentTime.toString();
+      if (durationLoaded) {
+        progressBarRef.current.value = currentTime.toString();
       } else {
-        let s = Number(progressBarRef.current.max)
-        progressBarRef.current.value = (s - 1).toString()
+        let s = Number(progressBarRef.current.max);
+        progressBarRef.current.value = (s - 1).toString();
       }
       progressBarRef.current.style.setProperty(
         "--range-progress",
-        `${(Number(progressBarRef.current.value) / duration) * 100}%`,
+        `${
+          (Number(progressBarRef.current.value) /
+            (durationLoaded
+              ? duration
+              : Number(progressBarRef.current.value) + 1)) *
+          100
+        }%`,
       );
     }
 
     playAnimationRef.current = requestAnimationFrame(repeat);
-  }, [audioRef, duration, progressBarRef, setTimeProgress]);
+  }, [audioRef, duration, progressBarRef, setTimeProgress, durationLoaded]);
 
   useEffect(() => {
     if (isPlaying) {

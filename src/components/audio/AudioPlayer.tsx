@@ -17,25 +17,22 @@ const AudioPlayer = ({ source }: AudioPlayerProps) => {
   const audioRef = useRef<HTMLAudioElement>(null);
   const progressBarRef = useRef<HTMLInputElement>(null);
 
-  const durationLoadedRef = useRef<boolean>(false);
+  const [durationLoaded, setDurationLoaded] = useState<boolean>(false);
 
   useEffect(() => {
-    console.log("Called")
-    if (!durationLoadedRef.current) {
-      setDuration(timeProgress + 1);
-      progressBarRef.current.max = (timeProgress + 1).toString()
-      onLoadedMetadata()
+    if (!durationLoaded && progressBarRef.current) {
+      progressBarRef.current.max = (timeProgress + 1).toString();
+      onLoadedMetadata();
     }
-  }, [timeProgress]);
+  }, [timeProgress, durationLoaded]);
 
   source ??= "/recording.m4a";
 
   const onLoadedMetadata = () => {
     if (audioRef.current) {
       const seconds = audioRef.current.duration;
-      console.log(seconds);
       if (isFinite(seconds)) {
-        durationLoadedRef.current = true;
+        setDurationLoaded(true);
         setDuration(seconds);
         if (progressBarRef.current)
           progressBarRef.current.max = seconds.toString();
@@ -70,11 +67,17 @@ const AudioPlayer = ({ source }: AudioPlayerProps) => {
               setTimeProgress,
               isPlaying,
               setIsPlaying,
-              durationLoadedRef
+              durationLoaded,
             }}
           />
           <ProgressBar
-            {...{ progressBarRef, audioRef, timeProgress, duration }}
+            {...{
+              progressBarRef,
+              audioRef,
+              timeProgress,
+              duration,
+              durationLoaded,
+            }}
           />
         </div>
       </div>

@@ -5,6 +5,7 @@ interface ProgressBarRef {
   audioRef: RefObject<HTMLAudioElement>;
   timeProgress: number;
   duration: number;
+  durationLoaded: boolean
 }
 
 const ProgressBar = ({
@@ -12,6 +13,7 @@ const ProgressBar = ({
   audioRef,
   timeProgress,
   duration,
+  durationLoaded
 }: ProgressBarRef) => {
   const handleProgressChange = () => {
     if (audioRef.current && progressBarRef.current)
@@ -40,7 +42,7 @@ const ProgressBar = ({
       />
       <div className="flex justify-between text-gray-400 text-sm ">
         <span className="time current">{formatTime(timeProgress)}</span>
-        <span className="time current">{formatTime(duration)}</span>
+        <span className="time current">{durationLoaded && formatTime(duration)}</span>
       </div>
     </div>
   );
