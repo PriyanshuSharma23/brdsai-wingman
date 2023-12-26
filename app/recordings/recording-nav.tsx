@@ -6,26 +6,35 @@ import { ArrowLeft, ChevronLeft, PencilLine, Trash2 } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 import { RenameDialog } from "./rename-dialog";
+import { useRouter } from "next/navigation";
 
 type RecordingNavProps = {
-  id: string;
   name: string;
   onEdit: (newName: string) => void;
   onDelete: () => void;
+  resourceName: "patient" | "recording";
+  fallbackBackRoute?: string;
 };
 
-export const RecordingNav = (props: RecordingNavProps) => {
+export const ActionsNav = (props: RecordingNavProps) => {
   const [open, setOpen] = useState(false);
+  const router = useRouter();
+
+  const back = () => {
+    if (window.history.length > 1) {
+      router.back();
+    } else {
+      router.push(props.fallbackBackRoute ?? "/");
+    }
+  };
 
   return (
     <>
       <NavWrapper>
         <div className="flex items-center text-primary gap-2">
-          <Link href={"/"}>
-            <button className="translate-y-[2px]">
+            <button className="translate-y-[2px]" onClick={back}>
               <ArrowLeft size={20} className="text-gray-500" />
             </button>
-          </Link>
           <p className="w-[20ch] overflow-hidden text-ellipsis line-clamp-1 max-w-max">
             {props.name}
           </p>
@@ -43,6 +52,7 @@ export const RecordingNav = (props: RecordingNavProps) => {
         </Button>
       </NavWrapper>
       <RenameDialog
+        resourceName={props.resourceName}
         open={open}
         setOpen={setOpen}
         name={props.name}

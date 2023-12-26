@@ -1,4 +1,5 @@
 import request from "@/lib/customAxios";
+import { Patient } from "@/types/Patient";
 import { useQuery } from "@tanstack/react-query";
 
 type UsePatientQueryProps = {
@@ -18,7 +19,7 @@ export const usePatientQuery = ({ patientId }: UsePatientQueryProps) => {
         throw new Error("Error fetching patients");
       }
 
-      return resp.data;
+      return resp.data as Patient;
     },
     refetchOnWindowFocus: false,
   });

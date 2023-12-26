@@ -1,6 +1,6 @@
 "use client";
 import { ReactNode } from "react";
-import { RecordingNav } from "../recording-nav";
+import { ActionsNav } from "../recording-nav";
 import AudioPlayer from "@/components/audio/AudioPlayer";
 
 type RecordingPageParams = {
@@ -13,8 +13,8 @@ type RecordingPageParams = {
 export default function RecordingsLayout(props: RecordingPageParams) {
   return (
     <main>
-      <RecordingNav
-        id={props.params.id}
+      <ActionsNav
+        resourceName="recording"
         name={"Consultation with Naman"}
         onEdit={function (newName: string): void {
           throw new Error("Function not implemented.");

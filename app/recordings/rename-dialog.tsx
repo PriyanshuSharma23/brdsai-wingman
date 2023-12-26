@@ -7,13 +7,14 @@ import {
   DialogDescription,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
-import { Dispatch, SetStateAction, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 
 type RenameDialogProps = {
   open: boolean;
   setOpen: Dispatch<SetStateAction<boolean>>;
   name: string;
   onEdit: (newName: string) => void;
+  resourceName: "patient" | "recording";
 };
 
 export const RenameDialog = ({
@@ -21,16 +22,21 @@ export const RenameDialog = ({
   setOpen,
   name,
   onEdit,
+  resourceName,
 }: RenameDialogProps) => {
   const [newName, setNewName] = useState(name);
+
+  useEffect(() => {
+    setNewName(name);
+  }, [name]);
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Rename Recording</DialogTitle>
+          <DialogTitle>Rename {toWordCase(resourceName)}</DialogTitle>
           <DialogDescription>
-            Rename the recording to a new name.
+            Rename the {resourceName} to a new name.
           </DialogDescription>
         </DialogHeader>
         <form
@@ -64,3 +70,7 @@ export const RenameDialog = ({
     </Dialog>
   );
 };
+
+const toWordCase = (resource: string) => {
+  return resource[0].toUpperCase() + resource.slice(1);
+}
