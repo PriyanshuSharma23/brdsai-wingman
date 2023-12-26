@@ -1,8 +1,11 @@
 "use client";
+import "regenerator-runtime/runtime";
 import { useEffect, useState } from "react";
 import SpeechRecognition, {
   useSpeechRecognition,
 } from "react-speech-recognition";
+
+
 
 type TranscriptVisualizerProps = {
   transcribe: boolean;

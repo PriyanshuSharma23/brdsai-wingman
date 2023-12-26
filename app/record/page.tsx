@@ -6,7 +6,6 @@ import { RecordingVisualizer } from "./recording-visualizer";
 import { useAudioRecorder } from "react-audio-voice-recorder";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { parseTimestamp } from "@/lib/utils";
-import { Button } from "@/components/ui/button";
 
 const RecordPage = () => {
   const {
@@ -31,18 +30,7 @@ const RecordPage = () => {
         stopRecording();
       });
     };
-  }, [mediaRecorder, startRecording]); // TODO: WHY UHHHH!!!!
-
-  // const [isRecording, setIsRecording] = useState(false);
-  // const togglePauseResume = () => {
-  //   setIsRecording(p => !p);
-  // }
-  // const startRecording = () => {
-  //   setIsRecording(true);
-  // }
-  // const stopRecording = () => {
-  //   setIsRecording(false);
-  // }
+  }, [startRecording, stopRecording]); // TODO: WHY UHHHH!!!!
 
   useEffect(() => {
     console.log("isRecording", isRecording);
