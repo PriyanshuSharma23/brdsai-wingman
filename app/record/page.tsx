@@ -6,6 +6,7 @@ import { RecordingVisualizer } from "./recording-visualizer";
 import { useAudioRecorder } from "react-audio-voice-recorder";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { parseTimestamp } from "@/lib/utils";
+import { SaveRecording } from "./save-recording";
 
 const RecordPage = () => {
   const {
@@ -19,6 +20,9 @@ const RecordPage = () => {
     recordingTime,
   } = useAudioRecorder({});
 
+  const [saveWindowOpen, setSaveWindowOpen] = useState(false);
+  const [audioSource, setAudioSource] = useState<string>();
+
   const firstTimeRef = useRef(false);
 
   useEffect(() => {
@@ -30,6 +34,18 @@ const RecordPage = () => {
   useEffect(() => {
     console.log("isRecording", isRecording);
   }, [isRecording]);
+
+  const saveRecording = () => {
+    stopRecording();
+    setSaveWindowOpen(true);
+  };
+
+  useEffect(() => {
+    if (recordingBlob != undefined) {
+      const url = URL.createObjectURL(recordingBlob);
+      setAudioSource(url);
+    }
+  }, [recordingBlob]);
 
   return (
     <>
@@ -84,8 +100,17 @@ const RecordPage = () => {
           startRecording,
           stopRecording,
           recordingTime,
+          saveRecording,
         }}
       />
+      {saveWindowOpen && (
+        <SaveRecording
+          closeWindow={() => {
+            setSaveWindowOpen(false);
+          }}
+          audioSource={audioSource}
+        />
+      )}
     </>
   );
 };

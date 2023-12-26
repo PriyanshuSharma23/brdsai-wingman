@@ -8,6 +8,7 @@ type RecordingControlsProps = {
   toggleRecording: () => void;
   startRecording: () => void;
   stopRecording: () => void;
+  saveRecording: () => void;
 };
 export const RecordingControls = (props: RecordingControlsProps) => {
   const handleClick = () => {
@@ -63,6 +64,7 @@ export const RecordingControls = (props: RecordingControlsProps) => {
             variant={"ghost"}
             className="text-blu hover:text-blu text-lg w-28"
             size={"lg"}
+            onClick={props.saveRecording}
           >
             Save
           </Button>

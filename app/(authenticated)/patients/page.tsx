@@ -4,8 +4,8 @@ import { SearchIconInput } from "@/components/ui/icon-input";
 import { Search, SlidersHorizontal } from "lucide-react";
 import { PatientCard } from "./patient-card";
 import { ActionButton } from "@/components/action-button";
-import { AddPatientModal } from "./patient-modal";
 import { useState } from "react";
+import { AddPatientModal } from "@/components/patient-modal";
 
 const patient = (
   <svg
