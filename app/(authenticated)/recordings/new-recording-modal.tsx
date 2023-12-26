@@ -29,7 +29,7 @@ import {
 } from "@/components/ui/select";
 
 import * as z from "zod";
-import { Plus, PlusCircle, PlusIcon } from "lucide-react";
+import { PlusCircle } from "lucide-react";
 
 type AddPatientModalProps = {
   open: boolean;
@@ -38,7 +38,7 @@ type AddPatientModalProps = {
 
 const addPatientSchema = z.object({
   recordingName: z.string(),
-  patient: z.string().optional(),
+  patient: z.string(),
 });
 
 const patients = [
@@ -68,7 +68,9 @@ export function AddRecordingModal({
     resolver: zodResolver(addPatientSchema),
   });
 
-  const onSubmit = (values: z.infer<typeof addPatientSchema>) => {};
+  const onSubmit = (values: z.infer<typeof addPatientSchema>) => {
+    console.log({ values });
+  };
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -111,7 +113,7 @@ export function AddRecordingModal({
                     <FormItem>
                       <FormLabel>Patient*</FormLabel>
                       <FormControl>
-                        <Select>
+                        <Select {...field}>
                           <SelectTrigger className="">
                             <SelectValue placeholder="Select a patient" />
                           </SelectTrigger>
@@ -147,14 +149,13 @@ export function AddRecordingModal({
                   );
                 }}
               />
+              <div className="pt-2"></div>
+              <Button type="submit" className="w-full rounded-full">
+                Start Recording
+              </Button>
             </form>
           </Form>
         </div>
-        <DialogFooter>
-          <Button type="submit" className="w-full rounded-full">
-            Start Recording
-          </Button>
-        </DialogFooter>
       </DialogContent>
     </Dialog>
   );

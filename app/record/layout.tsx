@@ -7,7 +7,7 @@ type RecordLayoutProps = {
 
 const RecordLayout = (props: RecordLayoutProps) => {
   return (
-    <main className="flex flex-col items-stretch h-screen overflow-hidden bg-red-100">
+    <main className="flex flex-col items-stretch h-screen overflow-hidden">
       <RecordNav />
       {props.children}
     </main>

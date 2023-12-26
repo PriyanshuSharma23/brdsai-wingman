@@ -13,40 +13,48 @@ export const TranscriptVisualizer = (props: TranscriptVisualizerProps) => {
     listening,
     resetTranscript,
     browserSupportsSpeechRecognition,
-  } = useSpeechRecognition();
+  } = useSpeechRecognition({
+    clearTranscriptOnListen: false,
+  });
 
+  const [lastTranscript, setLastTranscript] = useState("");
+
+  useEffect(() => {
+    if (transcript.length > 0) {
+      setLastTranscript(transcript);
+    }
+  }, [transcript]);
 
   useEffect(() => {
     if (props.transcribe) {
-      SpeechRecognition.startListening();
+      SpeechRecognition.startListening({
+        continuous: true,
+      });
     } else {
       SpeechRecognition.stopListening();
     }
   }, [props.transcribe]);
 
-  if (!browserSupportsSpeechRecognition || !props.transcribe) {
-    return <div></div>;
-  }
-
   return (
-    <p className="text-center text-gray-400/80 max-w-[30ch] mx-auto">
-      {getLastWindowContent(
-        transcript,
-        10,
-      )}
+    <p className="text-center text-gray-400/80 max-w-[30ch] mx-auto h-24">
+      {browserSupportsSpeechRecognition &&
+        getLastWindowContent(lastTranscript, 20)}
     </p>
   );
 };
 
 function getLastWindowContent(s: string, n: number) {
-  // Split the string into an array of words
-  const words = s.split(/\s+/);
+    // Split the string into an array of words
+    const words = s.split(/\s+/);
 
-  // Calculate the starting index for the last n words
-  const startIndex = Math.max(0, words.length - n);
+    // Calculate the number of windows
+    const numWindows = Math.ceil(words.length / n);
 
-  // Get the last n words from the array
-  const lastNWords = words.slice(startIndex);
+    // Calculate the starting index of the last window
+    const startIndex = (numWindows - 1) * n;
 
-  return lastNWords.join(" ");
+    // Get the content of the last window
+    const lastWindowContent = words.slice(startIndex).join(' ');
+
+    return lastWindowContent;
 }
