@@ -6,6 +6,8 @@ import { PatientCard } from "./patient-card";
 import { ActionButton } from "@/components/action-button";
 import { useState } from "react";
 import { AddPatientModal } from "@/components/patient-modal";
+import { useAllPatientQuery } from "@/queries/patient/all-patients-query";
+import { LoadingCard } from "@/components/loading-card";
 
 const patient = (
   <svg
@@ -31,6 +33,9 @@ const PatientsPage = () => {
     setModalOpen(true);
   };
 
+  const patientsQuery = useAllPatientQuery();
+  const closeModal = () => setModalOpen(false);
+
   return (
     <>
       <div className="px-4 md:px-12 xl:px-20 space-y-2 md:space-y-4 text-neutral-600 pt-6">
@@ -55,16 +60,30 @@ const PatientsPage = () => {
         </div>
 
         <div className="space-y-3  py-5">
-          {new Array(50).fill(1).map((_, i) => (
-            <PatientCard name="Naman Dureja" mrn="MRN-5632-8975" key={i} />
-          ))}
+          {patientsQuery.isLoading &&
+            new Array(5).fill(0).map((_, i) => {
+              return <LoadingCard key={i} />;
+            })}
+
+          {!!patientsQuery.data &&
+            patientsQuery.data.map((patient) => {
+              return (
+                <PatientCard
+                  name={patient.name}
+                  mrn={patient.uniqueId ?? "---"}
+                  key={patient.id}
+                  id={patient.id}
+                />
+              );
+            })}
         </div>
       </div>
       <ActionButton onClick={addPatient} />
       {/* Add Patient Modal */}
-      <AddPatientModal 
+      <AddPatientModal
         open={modalOpen}
         onOpenChange={setModalOpen}
+        closeModal={closeModal}
       />
     </>
   );

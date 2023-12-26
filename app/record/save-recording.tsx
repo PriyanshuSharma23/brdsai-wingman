@@ -68,6 +68,7 @@ export const SaveRecording = (props: SaveRecordingProps) => {
   };
 
   const [modalOpen, setModalOpen] = useState(false);
+  const closeModal = () => setModalOpen(false);
 
   return (
     <>
@@ -147,7 +148,7 @@ export const SaveRecording = (props: SaveRecordingProps) => {
                                     onClick={(e) => {
                                       e.preventDefault();
                                       e.stopPropagation();
-                                      setModalOpen(true)
+                                      setModalOpen(true);
                                     }}
                                     className="relative flex w-full cursor-default select-none items-center rounded-sm py-1.5 pl-8 pr-0 text-sm outline-none focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50 gap-2 text-blu"
                                   >
@@ -175,7 +176,11 @@ export const SaveRecording = (props: SaveRecordingProps) => {
           )}
         </div>
       </div>
-      <AddPatientModal open={modalOpen} onOpenChange={setModalOpen} />
+      <AddPatientModal
+        open={modalOpen}
+        onOpenChange={setModalOpen}
+        closeModal={closeModal}
+      />
     </>
   );
 };

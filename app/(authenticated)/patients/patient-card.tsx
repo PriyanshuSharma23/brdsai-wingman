@@ -4,11 +4,12 @@ import Link from "next/link";
 type PatientCardProps = {
   name: string;
   mrn: string;
+  id: number;
 };
 
 export const PatientCard = (props: PatientCardProps) => {
   return (
-    <Link href={`/patients/${props.mrn}`} className="block">
+    <Link href={`/patients/${props.id}`} className="block">
       <ChipCard
         title={props.name}
         content={props.mrn}

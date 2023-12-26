@@ -33,3 +33,7 @@ export function parseTimestamp(timestamp: number, segments: 2 | 3): string {
     );
   }
 }
+
+export function isResponseOk(status: number): boolean {
+  return 200 <= status && status < 300
+}

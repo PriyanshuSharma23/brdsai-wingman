@@ -19,10 +19,13 @@ import {
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
+import { useCreatePatientMutation } from "@/queries/patient/create-patient-mutation";
+import { toast } from "sonner";
 
 type AddPatientModalProps = {
   open: boolean;
   onOpenChange: (open: boolean) => void;
+  closeModal: () => void;
 };
 
 const addPatientSchema = z.object({
@@ -30,24 +33,42 @@ const addPatientSchema = z.object({
   mrn: z.string().optional(),
 });
 
-export function AddPatientModal({ open, onOpenChange }: AddPatientModalProps) {
+export function AddPatientModal({
+  open,
+  onOpenChange,
+  closeModal,
+}: AddPatientModalProps) {
   const form = useForm<z.infer<typeof addPatientSchema>>({
     resolver: zodResolver(addPatientSchema),
   });
 
-  const onSubmit = (values: z.infer<typeof addPatientSchema>) => { 
-  }
+  const createPatientMutation = useCreatePatientMutation();
+
+  const onSubmit = (values: z.infer<typeof addPatientSchema>) => {
+    createPatientMutation.mutate(
+      {
+        name: values.name,
+        uniqueId: values.mrn,
+      },
+      {
+        onSuccess() {
+          toast.success("Patient created");
+          closeModal();
+        },
+      },
+    );
+  };
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[425px]" >
+      <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
           <DialogTitle>Add Patient</DialogTitle>
           <DialogDescription>
             Add patient details for adding a new patient.
           </DialogDescription>
         </DialogHeader>
-        <div className="grid gap-4 py-4">
+        <div className="grid gap-4 pt-4 ">
           <Form {...form}>
             <form
               onSubmit={form.handleSubmit(onSubmit)}
@@ -74,7 +95,7 @@ export function AddPatientModal({ open, onOpenChange }: AddPatientModalProps) {
                 render={({ field }) => {
                   return (
                     <FormItem>
-                      <FormLabel>MRN*</FormLabel>
+                      <FormLabel>MRN</FormLabel>
                       <FormControl>
                         <Input placeholder="MRN-5632-8975" {...field} />
                       </FormControl>
@@ -83,12 +104,14 @@ export function AddPatientModal({ open, onOpenChange }: AddPatientModalProps) {
                   );
                 }}
               />
+              <DialogFooter className="mt-4">
+                <Button type="submit" className="w-full rounded-full">
+                  Add Patient
+                </Button>
+              </DialogFooter>
             </form>
           </Form>
         </div>
-        <DialogFooter>
-          <Button type="submit" className="w-full rounded-full">Add Patient</Button>
-        </DialogFooter>
       </DialogContent>
     </Dialog>
   );
