@@ -18,7 +18,7 @@ export default function Home() {
           {new Array(10).fill(0).map((_, idx) => {
             return (
               <div className="min-w-[12rem]" key={idx}>
-                <PatientCard name={"Adnan"} mrn={"MRN-5632-8975"} />
+                <PatientCard name={"Adnan"} mrn={"MRN-5632-8975"} id={1} />
               </div>
             );
           })}
