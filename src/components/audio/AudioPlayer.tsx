@@ -6,7 +6,7 @@ import ProgressBar from "./ProgressBar";
 import { AUDIO_PLAYER_HEIGHT } from "@/lib/constants";
 
 interface AudioPlayerProps {
-  source: string;
+  source?: string;
 }
 const AudioPlayer = ({ source }: AudioPlayerProps) => {
   const [timeProgress, setTimeProgress] = useState(0);
