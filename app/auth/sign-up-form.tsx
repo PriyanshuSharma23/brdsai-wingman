@@ -11,24 +11,36 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { UseFormReturn } from "react-hook-form";
+import auth from "@/lib/auth";
 
-export const signUpFormSchema = z
-  .object({
-    email: z.string().email(),
-    password: z.string().min(5).max(24),
-    confirmPassword: z.string().min(5).max(24),
-  })
-  .refine((data) => data.password === data.confirmPassword, {
-    message: "Passwords don't match",
-    path: ["confirmPassword"],
-  });
+async function checkEmailInDB(email: string) {
+  try {
+    const res = await auth.checkEmailExists(email);
+    return res;
+  } catch (e: any) {
+    return false;
+  }
+}
+
+export const signUpFormSchema = z.object({
+  name: z.string(),
+  email: z
+    .string()
+    .email()
+    .refine(async (e) => {
+      let res = await checkEmailInDB(e);
+      console.log("Email exists", res);
+      return !res;
+    }, "Email already exists"),
+  password: z.string().min(5).max(24),
+});
 
 type SignUpFormProps = {
   signUpForm: UseFormReturn<
     {
+      name: string;
       email: string;
       password: string;
-      confirmPassword: string;
     },
     any,
     undefined
@@ -43,6 +55,21 @@ export const SignUpForm = ({ signUpForm, onSubmit }: SignUpFormProps) => {
         onSubmit={signUpForm.handleSubmit(onSubmit)}
         className="space-y-4 container max-w-lg flex flex-col flex-1 "
       >
+        <FormField
+          control={signUpForm.control}
+          name="name"
+          render={({ field }) => {
+            return (
+              <FormItem>
+                <FormLabel>Name*</FormLabel>
+                <FormControl>
+                  <Input placeholder="John Doe" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            );
+          }}
+        />
         <FormField
           control={signUpForm.control}
           name="email"
@@ -78,25 +105,14 @@ export const SignUpForm = ({ signUpForm, onSubmit }: SignUpFormProps) => {
           }}
         />
 
-        <FormField
-          control={signUpForm.control}
-          name="confirmPassword"
-          render={({ field }) => {
-            return (
-              <FormItem>
-                <FormLabel>Confirm Password</FormLabel>
-                <FormControl>
-                  <Input
-                    placeholder="Re-enter password"
-                    {...field}
-                    type="password"
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            );
-          }}
-        />
+        {signUpForm.formState.errors.root &&
+          signUpForm.formState.errors.root.serverCatch && (
+            <p className="text-red-400">
+              {signUpForm.formState.errors.root.serverCatch.message}
+            </p>
+          )}
+        <p></p>
+
         <div className="flex-1"></div>
 
         <div className="space-y-2">

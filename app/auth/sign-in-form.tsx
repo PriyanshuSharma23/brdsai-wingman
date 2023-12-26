@@ -63,7 +63,11 @@ export const SignInForm = ({ signInForm, onSubmit }: SignInFormProps) => {
                 <FormItem>
                   <FormLabel>Password</FormLabel>
                   <FormControl>
-                    <Input placeholder="Enter a secure password" {...field} />
+                    <Input
+                      placeholder="Enter password"
+                      {...field}
+                      type="password"
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -81,6 +85,13 @@ export const SignInForm = ({ signInForm, onSubmit }: SignInFormProps) => {
             Forgot Password?
           </Button>
         </div>
+
+        {signInForm.formState.errors.root &&
+          signInForm.formState.errors.root.serverCatch && (
+            <p className="text-red-400">
+              {signInForm.formState.errors.root.serverCatch.message}
+            </p>
+          )}
 
         <div className="flex-1"></div>
 

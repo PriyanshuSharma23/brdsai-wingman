@@ -5,7 +5,6 @@ import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -17,42 +16,46 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { ArrowLeft, CheckCircle2 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 
 const formSchema = z.object({
-  email: z.string().email(),
+  password: z.string().min(5),
 });
 
 export default function ForgetPasswordPage() {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      email: ""
-    }
+      password: "",
+    },
   });
 
-  const [emailSent, setEmailSent] = useState(false);
+  const [passwordReset, setPasswordReset] = useState(false);
+  const params = useSearchParams();
 
   const router = useRouter();
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    const email = values.email.valueOf() as string;
+    const password = values.password.valueOf() as string;
     try {
-      const res = await auth.forgotPassword(email);
-      if (res == true) {
-        setEmailSent(true);
+      const res = await auth.resetPassword(
+        password,
+        params.get("id") as string,
+      );
+      if (res) {
+        setPasswordReset(true)
       } else {
         form.setError("root.serverCatch", {
           type: "server",
-          message: "Invalid Email",
+          message: "Something went wrong.",
         });
       }
-    } catch (e) {
+    } catch (e: any) {
       form.setError("root.serverCatch", {
         type: "server",
-        message: "Something went wrong. Please try again.",
+        message: e.message,
       });
     }
   }
@@ -65,7 +68,7 @@ export default function ForgetPasswordPage() {
         width={245.5}
         height={180.7}
         className={`${
-          !emailSent ? "bottom-28" : "top-8"
+          !passwordReset ? "bottom-28" : "top-8"
         } md:bottom-10 right-0  fixed -z-50 max-w-md`}
         priority
       />
@@ -86,14 +89,14 @@ export default function ForgetPasswordPage() {
               </button>
             </Link>
 
-            <h1 className="text-neutral-700">Forgot Password</h1>
+            <h1 className="text-neutral-700">Reset Password</h1>
           </div>
         </NavWrapper>
       </div>
 
       <div className="pt-14"></div>
 
-      {emailSent ? (
+      {passwordReset ? (
         <CheckCircle2 size={44} className="text-blu mx-auto" />
       ) : (
         <Image
@@ -106,17 +109,14 @@ export default function ForgetPasswordPage() {
       )}
 
       <p className="text-lg text-neutral-700 max-w-[30ch] mx-auto text-center pt-5">
-        {!emailSent ? (
-          "We’ll send a password reset link on your registed email"
+        {!passwordReset ? (
+          "Enter a new password"
         ) : (
-          <>
-            A password reset email has been sent to{" "}
-            <span className="text-blu">{form.getValues().email}</span>
-          </>
+          <>Your password has been reset.</>
         )}
       </p>
 
-      {!emailSent && (
+      {!passwordReset && (
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(onSubmit)}
@@ -124,13 +124,17 @@ export default function ForgetPasswordPage() {
           >
             <FormField
               control={form.control}
-              name="email"
+              name="password"
               render={({ field }) => {
                 return (
                   <FormItem>
-                    <FormLabel>Email*</FormLabel>
+                    <FormLabel>Password*</FormLabel>
                     <FormControl>
-                      <Input placeholder="fizz@buzz.com" {...field} />
+                      <Input
+                        placeholder="Enter a secure password"
+                        {...field}
+                        type="password"
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -144,18 +148,15 @@ export default function ForgetPasswordPage() {
                 </p>
               )}
             <Button className="bg-blu rounded-full w-full hover:bg-blu hover:brightness-110 transition-all text-base">
-              Proceed
+              Reset Password
             </Button>
           </form>
         </Form>
       )}
 
-      {emailSent && (
+      {passwordReset && (
         <>
-          <div className="pt-8 text-center px-8 space-y-8 max-w-lg mx-auto">
-            <Button className="bg-blu rounded-full w-full hover:bg-blu hover:brightness-110 transition-all text-base ">
-              Open Email
-            </Button>
+          <div className="text-center px-8  max-w-lg mx-auto">
             <div className="">
               <Link href={"/auth"} className="text-blu underline mx-auto ">
                 Back to Login
