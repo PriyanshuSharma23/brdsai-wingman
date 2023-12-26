@@ -29,6 +29,7 @@ export const TranscriptVisualizer = (props: TranscriptVisualizerProps) => {
   }, [transcript]);
 
   useEffect(() => {
+    if (!browserSupportsSpeechRecognition) return;
     if (props.transcribe) {
       SpeechRecognition.startListening({
         continuous: true,
@@ -36,7 +37,7 @@ export const TranscriptVisualizer = (props: TranscriptVisualizerProps) => {
     } else {
       SpeechRecognition.stopListening();
     }
-  }, [props.transcribe]);
+  }, [browserSupportsSpeechRecognition, props.transcribe]);
 
   return (
     <p className="text-center text-gray-400/80 max-w-[30ch] mx-auto h-24">
