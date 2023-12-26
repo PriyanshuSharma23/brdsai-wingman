@@ -12,13 +12,13 @@ import {
 import { Button } from "@/components/ui/button";
 import { ActionButton } from "@/components/action-button";
 import { useState } from "react";
-import { AddRecordingModal } from "./new-recording-modal";
+import { useRouter } from "next/navigation";
 
 export default function RecordingsPage() {
-  const [modalOpen, setModalOpen] = useState(false);
-
+  const router = useRouter();
+  
   const action = () => {
-    setModalOpen(true);
+    router.push("/record");
   };
 
   return (
@@ -57,7 +57,6 @@ export default function RecordingsPage() {
       </div>
 
       <ActionButton onClick={action} />
-      <AddRecordingModal open={modalOpen} onOpenChange={setModalOpen} />
     </>
   );
 }
