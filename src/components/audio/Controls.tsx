@@ -15,6 +15,7 @@ interface ControlsProps {
   setTimeProgress: Dispatch<SetStateAction<number>>;
   isPlaying: boolean;
   setIsPlaying: Dispatch<SetStateAction<boolean>>;
+  durationLoadedRef: RefObject<boolean>;
 }
 
 const Controls = ({
@@ -24,6 +25,7 @@ const Controls = ({
   setTimeProgress,
   isPlaying,
   setIsPlaying,
+  durationLoadedRef,
 }: ControlsProps) => {
   const togglePlayPause = () => {
     setIsPlaying((prev) => !prev);
@@ -36,7 +38,12 @@ const Controls = ({
     setTimeProgress(currentTime);
 
     if (progressBarRef.current) {
+      if (durationLoadedRef.current) {
       progressBarRef.current.value = currentTime.toString();
+      } else {
+        let s = Number(progressBarRef.current.max)
+        progressBarRef.current.value = (s - 1).toString()
+      }
       progressBarRef.current.style.setProperty(
         "--range-progress",
         `${(Number(progressBarRef.current.value) / duration) * 100}%`,
