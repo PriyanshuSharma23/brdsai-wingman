@@ -1,25 +1,28 @@
-import type { Metadata } from 'next'
-import { Inter } from 'next/font/google'
-import './globals.css'
-import './custom-progress-bar.css'
-import { Toaster } from 'sonner'
+import type { Metadata } from "next";
+import { Inter } from "next/font/google";
+import "./globals.css";
+import "./custom-progress-bar.css";
+import { Toaster } from "sonner";
+import Provider from "@/components/provider";
 
-const inter = Inter({ subsets: ['latin'] })
+const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: 'Brdsai Wingman',
-  description: 'Standaline audio recording for brdsai',
-}
+  title: "Brdsai Wingman",
+  description: "Standaline audio recording for brdsai",
+};
 
 export default function RootLayout({
   children,
 }: {
-  children: React.ReactNode
+  children: React.ReactNode;
 }) {
   return (
     <html lang="en">
-      <body className={inter.className}>{children}</body>
+      <body className={inter.className}>
+        <Provider>{children}</Provider>
+      </body>
       <Toaster />
     </html>
-  )
+  );
 }
