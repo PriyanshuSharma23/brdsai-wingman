@@ -22,6 +22,7 @@ const RecordPage = () => {
   const firstTimeRef = useRef(false);
 
   useEffect(() => {
+    // @ts-ignore
     navigator.permissions.query({ name: "microphone" }).then((permObj) => {
       if (permObj.state === "granted") {
         if (!firstTimeRef.current) startRecording();
