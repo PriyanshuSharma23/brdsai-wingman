@@ -12,7 +12,7 @@ type RecordingPageParams = {
 
 export default function RecordingsLayout(props: RecordingPageParams) {
   return (
-    <main>
+    <main className="flex flex-col ">
       <ActionsNav
         resourceName="recording"
         name={"Consultation with Naman"}
@@ -24,7 +24,6 @@ export default function RecordingsLayout(props: RecordingPageParams) {
         }}
       />
       {props.children}
-      <AudioPlayer />
     </main>
   );
 }

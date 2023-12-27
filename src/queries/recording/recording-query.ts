@@ -1,4 +1,5 @@
 import request from "@/lib/customAxios";
+import { Patient } from "@/types/Patient";
 import { Recording } from "@/types/Recording";
 import { useQuery } from "@tanstack/react-query";
 
@@ -12,14 +13,16 @@ export const useRecordingQuery = ({ recordingId }: UseRecordingQueryProps) => {
       let [, recordingId] = params.queryKey as [string, number];
       let resp = await request({
         method: "GET",
-        url: "/brdsai/wingman/recording/getRecordingById/" + recordingId.toString(),
+        url:
+          "/brdsai/wingman/recording/getRecordingById/" +
+          recordingId.toString(),
       });
 
       if (resp.status !== 200) {
         throw new Error("Error fetching patients");
       }
 
-      return resp.data as Recording;
+      return resp.data as { recording: Recording; patient: Patient };
     },
     refetchOnWindowFocus: false,
   });

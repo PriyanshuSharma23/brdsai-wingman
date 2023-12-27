@@ -1,23 +1,76 @@
-import { useEffect, useRef, useState } from "react";
+import {
+  Dispatch,
+  RefObject,
+  SetStateAction,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 
 // import components
 import Controls from "./Controls";
 import ProgressBar from "./ProgressBar";
-import { AUDIO_PLAYER_HEIGHT } from "@/lib/constants";
+import { create } from "zustand";
+
+interface AudioPlayerState {
+  duration: number;
+  setDuration: (duration: number) => void;
+  timeProgress: number;
+  setTimeProgress: (timeProgress: number) => void;
+  isPlaying: boolean;
+  setIsPlaying: (isPlaying: boolean) => void;
+  togglePlayPause: () => void;
+  disabled: boolean;
+  durationLoaded: boolean;
+  setDurationLoaded: (durationLoaded: boolean) => void;
+}
+const useAudioPlayerState = create<AudioPlayerState>((set, get) => ({
+  duration: 0,
+  setDuration: (duration) => set({ duration }),
+  timeProgress: 0,
+  setTimeProgress: (timeProgress) => set({ timeProgress }),
+  isPlaying: false,
+  setIsPlaying: (isPlaying) => set({ isPlaying }),
+  togglePlayPause: () => set((state) => ({ isPlaying: !state.isPlaying })),
+  disabled: false,
+  durationLoaded: false,
+  setDurationLoaded: (durationLoaded) => set({ durationLoaded }),
+}));
 
 interface AudioPlayerProps {
   source?: string;
+  onEnd?: () => void;
+  autoPlay?: boolean;
+  disabled?: boolean;
 }
-const AudioPlayer = ({ source }: AudioPlayerProps) => {
-  const [timeProgress, setTimeProgress] = useState(0);
-  const [duration, setDuration] = useState(0);
-  const [isPlaying, setIsPlaying] = useState(false);
+const AudioPlayer = ({
+  source,
+  onEnd,
+  autoPlay = false,
+  disabled = false,
+}: AudioPlayerProps) => {
+  const {
+    togglePlayPause,
+    duration,
+    setDuration,
+    timeProgress,
+    setTimeProgress,
+    isPlaying,
+    setIsPlaying,
+    durationLoaded,
+    setDurationLoaded,
+  } = useAudioPlayerState();
 
   // reference
   const audioRef = useRef<HTMLAudioElement>(null);
   const progressBarRef = useRef<HTMLInputElement>(null);
 
-  const [durationLoaded, setDurationLoaded] = useState<boolean>(false);
+  useEffect(() => {
+    if (autoPlay && source != "") {
+      audioRef.current?.play();
+      setIsPlaying(true);
+    }
+  }, [source, autoPlay, audioRef]);
 
   useEffect(() => {
     if (!durationLoaded && progressBarRef.current) {
@@ -25,8 +78,6 @@ const AudioPlayer = ({ source }: AudioPlayerProps) => {
       onLoadedMetadata();
     }
   }, [timeProgress, durationLoaded]);
-
-  source ??= "/recording.m4a";
 
   const onLoadedMetadata = () => {
     if (audioRef.current) {
@@ -42,11 +93,8 @@ const AudioPlayer = ({ source }: AudioPlayerProps) => {
 
   const handleEnd = () => {
     setIsPlaying(false);
+    onEnd?.();
   };
-
-  useEffect(() => {
-    onLoadedMetadata();
-  }, [source]);
 
   return (
     <>
@@ -56,6 +104,7 @@ const AudioPlayer = ({ source }: AudioPlayerProps) => {
         onLoadedMetadata={onLoadedMetadata}
         onEnded={handleEnd}
         className="w-full"
+        autoPlay
       />
       <div className="audio-player">
         <div className="flex  gap-2 md:container">
@@ -67,7 +116,9 @@ const AudioPlayer = ({ source }: AudioPlayerProps) => {
               setTimeProgress,
               isPlaying,
               setIsPlaying,
+              disabled,
               durationLoaded,
+              togglePlayPause,
             }}
           />
           <ProgressBar

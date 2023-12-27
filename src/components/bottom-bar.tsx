@@ -3,10 +3,10 @@
 import { usePathname, useRouter } from "next/navigation";
 import { Button } from "./ui/button";
 import { Mic } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { cn, createAudioSourceFromKey } from "@/lib/utils";
 import { AUDIO_PLAYER_HEIGHT, BOTTOM_BAR_HEIGHT } from "@/lib/constants";
 import AudioPlayer from "./audio/AudioPlayer";
-import { useAudioPlayer } from "@/state/global-audio-player";
+import { useAudioPlayerState } from "@/state/global-audio-player";
 
 const PATHS = {
   "/": {
@@ -58,7 +58,12 @@ const PATHS = {
 export const BottomBar = () => {
   const pathname = usePathname();
   const router = useRouter();
-  const { visible } = useAudioPlayer();
+  const {
+    visible,
+    setVisible,
+    setAudios3Key: setAudioSource,
+    audioS3Key: audioSource,
+  } = useAudioPlayerState();
 
   return (
     <div className="fixed bottom-0 w-full">
@@ -69,7 +74,14 @@ export const BottomBar = () => {
             height: `${AUDIO_PLAYER_HEIGHT}px`,
           }}
         >
-          <AudioPlayer />
+          <AudioPlayer
+            source={createAudioSourceFromKey(audioSource)}
+            autoPlay={true}
+            onEnd={() => {
+              setVisible(false);
+              setAudioSource("");
+            }}
+          />
         </div>
       )}
       <div className="border-t">
@@ -85,7 +97,7 @@ export const BottomBar = () => {
               key={path.name}
               className={cn(
                 "flex-col py-2 h-auto ",
-                pathname == key ? "text-blu hover:text-blu" : "text-gray-400",
+                pathname == key ? "text-blu hover:text-blu" : "text-gray-400"
               )}
               onClick={() => router.push(key)}
             >

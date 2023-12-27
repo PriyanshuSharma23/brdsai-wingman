@@ -29,42 +29,54 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import { AddPatientModal } from "@/components/patient-modal";
+import { useAllPatientQuery } from "@/queries/patient/all-patients-query";
+import { useCreateRecordingMutation } from "@/queries/recording/create-recording-mutaion";
+import { useRouter } from "next/navigation";
 
 const addPatientSchema = z.object({
   recordingName: z.string(),
   patient: z.string(),
 });
 
-const patients = [
-  {
-    name: "Ishaan Das",
-    mrn: "MRN-5632-8975",
-  },
-  {
-    name: "Priyanshu Sharma",
-    mrn: "MRN-5632-8976",
-  },
-  {
-    name: "Khushi Vohra",
-    mrn: "MRN-5632-8977",
-  },
-  {
-    name: "Dinesh Mehta",
-    mrn: "MRN-5632-8978",
-  },
-];
-
 interface SaveRecordingProps {
+  duration: number;
   closeWindow: () => void;
   audioSource: string | undefined;
+  recordingBlob?: Blob;
 }
 export const SaveRecording = (props: SaveRecordingProps) => {
   const form = useForm<z.infer<typeof addPatientSchema>>({
     resolver: zodResolver(addPatientSchema),
   });
 
+  const patientsQuery = useAllPatientQuery();
+  const createRecordingMutation = useCreateRecordingMutation();
+
+  const router = useRouter();
+
   const onSubmit = (values: z.infer<typeof addPatientSchema>) => {
-    console.log({ values });
+    if (!props.recordingBlob) {
+      return;
+    }
+    console.log({
+      patientId: Number(values.patient),
+      recordingFile: props.recordingBlob,
+      duration: props.duration * 1000,
+      recordingName: values.recordingName,
+    });
+    createRecordingMutation.mutate(
+      {
+        patientId: Number(values.patient),
+        recordingFile: props.recordingBlob,
+        duration: props.duration * 1000,
+        recordingName: values.recordingName,
+      },
+      {
+        onSuccess: (data) => {
+          router.push("/recordings/" + data.id);
+        },
+      },
+    );
   };
 
   const [modalOpen, setModalOpen] = useState(false);
@@ -123,7 +135,9 @@ export const SaveRecording = (props: SaveRecordingProps) => {
                             <Select
                               onValueChange={field.onChange}
                               value={field.value}
-                              disabled={field.disabled}
+                              disabled={
+                                patientsQuery.isLoading || field.disabled
+                              }
                               name={field.name}
                             >
                               <SelectTrigger className="">
@@ -135,10 +149,10 @@ export const SaveRecording = (props: SaveRecordingProps) => {
                               >
                                 <SelectGroup>
                                   <SelectLabel>Patients</SelectLabel>
-                                  {patients.map((patient) => (
+                                  {patientsQuery.data?.map((patient) => (
                                     <SelectItem
-                                      value={patient.mrn}
-                                      key={patient.mrn}
+                                      value={patient.id.toString()}
+                                      key={patient.id}
                                     >
                                       {patient.name}
                                     </SelectItem>
@@ -165,7 +179,10 @@ export const SaveRecording = (props: SaveRecordingProps) => {
                     }}
                   />
                   <div className="pt-2"></div>
-                  <Button type="submit" className="w-full rounded-full">
+                  <Button type="submit" className="w-full rounded-full"
+                    disabled={createRecordingMutation.isPending}
+
+                  >
                     Save Recording
                   </Button>
                 </form>

@@ -2,7 +2,7 @@
 
 import { Plus } from "lucide-react";
 import { Button } from "./ui/button";
-import { useAudioPlayer } from "@/state/global-audio-player";
+import { useAudioPlayerState } from "@/state/global-audio-player";
 import { cn } from "@/lib/utils";
 import { AUDIO_PLAYER_HEIGHT, BOTTOM_BAR_HEIGHT } from "@/lib/constants";
 
@@ -11,7 +11,7 @@ type ActionButtonProps = {
 };
 
 export const ActionButton = ({ onClick: action }: ActionButtonProps) => {
-  const { visible } = useAudioPlayer();
+  const { visible } = useAudioPlayerState();
 
   const bottom = BOTTOM_BAR_HEIGHT + (visible ? AUDIO_PLAYER_HEIGHT : 0) + 12;
 

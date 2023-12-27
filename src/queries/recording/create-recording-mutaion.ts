@@ -7,6 +7,7 @@ type MutationParams = {
   recordingName: string;
   patientId: number;
   recordingFile: Blob;
+  duration: number;
 };
 
 export const useCreateRecordingMutation = () => {
@@ -18,6 +19,7 @@ export const useCreateRecordingMutation = () => {
       let formData = new FormData();
       formData.set("recordingName", params.recordingName);
       formData.set("patientId", params.patientId.toString());
+      formData.set("duration", params.duration.toString());
       formData.set("recordingFile", params.recordingFile);
 
       let response = await request({

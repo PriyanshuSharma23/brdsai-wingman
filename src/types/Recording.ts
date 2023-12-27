@@ -5,4 +5,5 @@ export type Recording = {
   recordingName: string;
   patientId: number;
   createdAt: string;
+  duration: number | null
 };

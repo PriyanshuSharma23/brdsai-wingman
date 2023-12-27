@@ -2,9 +2,9 @@ import { ChipCard } from "@/components/chip-card";
 import Link from "next/link";
 
 type PatientCardProps = {
+  id: number;
   name: string;
   mrn: string;
-  id: number;
 };
 
 export const PatientCard = (props: PatientCardProps) => {

@@ -37,3 +37,6 @@ export function parseTimestamp(timestamp: number, segments: 2 | 3): string {
 export function isResponseOk(status: number): boolean {
   return 200 <= status && status < 300
 }
+
+export const createAudioSourceFromKey = (key: string) =>
+  `https://cdn.brdsai.com/${key}`;

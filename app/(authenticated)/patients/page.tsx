@@ -8,6 +8,7 @@ import { useState } from "react";
 import { AddPatientModal } from "@/components/patient-modal";
 import { useAllPatientQuery } from "@/queries/patient/all-patients-query";
 import { LoadingCard } from "@/components/loading-card";
+import { EmptyPatients } from "./empty-patient";
 
 const patient = (
   <svg
@@ -35,6 +36,10 @@ const PatientsPage = () => {
 
   const patientsQuery = useAllPatientQuery();
   const closeModal = () => setModalOpen(false);
+
+  if (patientsQuery.data && patientsQuery.data.length === 0) {
+    return <EmptyPatients />;
+  }
 
   return (
     <>

@@ -13,13 +13,25 @@ import { Button } from "@/components/ui/button";
 import { ActionButton } from "@/components/action-button";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { useAllRecordingsQuery } from "@/queries/recording/recordings-query";
+import { LoadingCard } from "@/components/loading-card";
+import { PatientCard } from "../patients/patient-card";
+import { parseTimestamp } from "@/lib/utils";
+import { useAudioPlayerState } from "@/state/global-audio-player";
+import { EmptyRecordings } from "./empty-recordings";
 
 export default function RecordingsPage() {
   const router = useRouter();
-  
+
   const action = () => {
     router.push("/record");
   };
+
+  const recordingsQuery = useAllRecordingsQuery();
+
+  if (recordingsQuery.data && recordingsQuery.data.length === 0) {
+    return <EmptyRecordings />;
+  }
 
   return (
     <>
@@ -44,15 +56,28 @@ export default function RecordingsPage() {
         </div>
 
         <div className="space-y-4 py-2">
-          {new Array(50).fill(1).map((_, i) => (
-            <AudioCard
-              id={`${i}`}
-              name={"Recording " + `${i + 1}`}
-              duration={"10:30"}
-              key={i}
-              recordedBy="Naman Dureja"
-            />
-          ))}
+          {recordingsQuery.isLoading &&
+            new Array(5).fill(0).map((_, i) => {
+              return <LoadingCard key={i} />;
+            })}
+
+          {!!recordingsQuery.data &&
+            recordingsQuery.data.map((recording) => {
+              return (
+                <AudioCard
+                  id={recording.recording.id}
+                  key={recording.recording.id}
+                  name={recording.recording.recordingName}
+                  recordedBy={recording.patient.name}
+                  duration={
+                    recording.recording.duration
+                      ? parseTimestamp(recording.recording.duration, 2)
+                      : "--:--"
+                  }
+                  audioKey={recording.recording.s3Key}
+                />
+              );
+            })}
         </div>
       </div>
 
@@ -62,19 +87,28 @@ export default function RecordingsPage() {
 }
 
 type AudioCardProps = {
-  id: string;
+  id: number;
   name: string;
   duration: string;
   recordedBy: string;
+  audioKey: string;
 };
 function AudioCard(props: AudioCardProps) {
+  const { audioS3Key, setAudios3Key, setVisible } = useAudioPlayerState();
+
+  function playAudio(e: any) {
+    e.preventDefault();
+    e.stopPropagation();
+    setAudios3Key(props.audioKey);
+    setVisible(true);
+  }
   return (
     <Link href={"/recordings/" + props.id} className="block">
-      <div className="flex w-full p-3 border rounded-md items-center gap-4">
+      <div className="flex w-full p-3 border rounded-md items-center gap-1 ">
         <div className="space-y-1 ">
           <div className="flex gap-1 items-center text-blu ">
             <Mic size={18} />
-            <p>{props.name}</p>
+            <p className="line-clamp-1">{props.name}</p>
           </div>
           <div className="flex items-center gap-1">
             {user}
@@ -84,12 +118,15 @@ function AudioCard(props: AudioCardProps) {
 
         <div className="flex-1"></div>
 
-        <div className="flex items-center gap-1">
+        <div className="flex items-center gap-1 mr-2">
           <Clock className="stroke-gray-400" size={14} />
           <p className="text-sm text-gray-400">{props.duration}</p>
         </div>
-        <button className="w-8 h-8 bg-gray-100 border border-gray-200 rounded-full grid place-content-center">
-          <Play size={18} className="text-blu translate-x-[2px]" />
+        <button
+          className="w-8 h-8 bg-gray-100 border border-gray-200 rounded-full grid place-content-center flex-shrink-0"
+          onClick={playAudio}
+        >
+          <Play size={18} className="text-blu translate-x-[1px]" />
         </button>
         <button>
           <MoreVertical size={18} className="text-gray-400" />

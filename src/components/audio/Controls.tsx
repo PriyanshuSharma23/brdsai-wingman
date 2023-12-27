@@ -12,25 +12,25 @@ interface ControlsProps {
   audioRef: RefObject<HTMLAudioElement>;
   progressBarRef: RefObject<HTMLInputElement>;
   duration: number;
-  setTimeProgress: Dispatch<SetStateAction<number>>;
+  setTimeProgress: (timeProgress: number) => void;
   isPlaying: boolean;
-  setIsPlaying: Dispatch<SetStateAction<boolean>>;
+  setIsPlaying: (isPlaying: boolean) => void;
   durationLoaded: boolean;
+  togglePlayPause: () => void;
+  disabled: boolean;
 }
 
 const Controls = ({
   audioRef,
+  disabled,
   progressBarRef,
   duration,
   setTimeProgress,
   isPlaying,
   setIsPlaying,
   durationLoaded,
+  togglePlayPause,
 }: ControlsProps) => {
-  const togglePlayPause = () => {
-    setIsPlaying((prev) => !prev);
-  };
-
   const playAnimationRef = useRef<number>();
 
   const repeat = useCallback(() => {
@@ -52,7 +52,7 @@ const Controls = ({
               ? duration
               : Number(progressBarRef.current.value) + 1)) *
           100
-        }%`,
+        }%`
       );
     }
 
@@ -72,6 +72,7 @@ const Controls = ({
     <button
       onClick={() => togglePlayPause()}
       className="text-white bg-blu rounded-full px-2 py-2 grid place-content-center flex-shrink-0 w-10 h-10"
+      disabled={disabled}
     >
       {isPlaying ? (
         <Pause size={20} />

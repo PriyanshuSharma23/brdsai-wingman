@@ -23,6 +23,7 @@ const RecordPage = () => {
   const [saveWindowOpen, setSaveWindowOpen] = useState(false);
   const [audioSource, setAudioSource] = useState<string>();
 
+  const durationRef = useRef<number>(0);
   const firstTimeRef = useRef(false);
 
   useEffect(() => {
@@ -36,6 +37,7 @@ const RecordPage = () => {
   }, [isRecording]);
 
   const saveRecording = () => {
+    durationRef.current = recordingTime;
     stopRecording();
     setSaveWindowOpen(true);
   };
@@ -105,10 +107,12 @@ const RecordPage = () => {
       />
       {saveWindowOpen && (
         <SaveRecording
+          recordingBlob={recordingBlob}
           closeWindow={() => {
             setSaveWindowOpen(false);
           }}
           audioSource={audioSource}
+          duration={durationRef.current}
         />
       )}
     </>

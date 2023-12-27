@@ -14,17 +14,19 @@ export const RecordingControls = (props: RecordingControlsProps) => {
   const handleClick = () => {
     props.toggleRecording();
   };
-  const handleDelete = () => { // For some reason the microphone access does not stop without pausing first
+  const handleDelete = () => {
+    // For some reason the microphone access does not stop without pausing first
     if (!props.isPaused) {
       props.toggleRecording();
     }
-    setTimeout(() => { // stop recording at the end of the cycle after the toggling is done
+    setTimeout(() => {
+      // stop recording at the end of the cycle after the toggling is done
       props.stopRecording();
     });
   };
   return (
     <div className="  py-6 pt-12 ">
-      <div className="flex items-center justify-center md:justify-center gap-8 ">
+      <div className="flex items-center justify-center md:justify-center gap-6 px-8">
         {props.isRecording && (
           <Button
             variant={"ghost"}
@@ -37,26 +39,28 @@ export const RecordingControls = (props: RecordingControlsProps) => {
         )}
         {props.isRecording ? (
           <Button
-            className="mic-shadow shadow-2xl shadow-blu text-xl rounded-xl py-8 px-6 w-32"
+            className="mic-shadow shadow-2xl shadow-blu text-xl rounded-xl py-8 px-6 "
             onClick={handleClick}
             key={"play-pause"}
           >
-            {!props.isPaused
-              ? // <Pause className="flex-shrink-0" size={28} />
-                "Pause"
-              : // <Mic className="flex-shrink-0" size={28} />
-                "Resume"}
+            <span className="block w-20">
+              {!props.isPaused
+                ? // <Pause className="flex-shrink-0" size={28} />
+                  "Pause"
+                : // <Mic className="flex-shrink-0" size={28} />
+                  "Resume"}
+            </span>
           </Button>
         ) : (
           <Button
-            className="mic-shadow shadow-2xl shadow-blu text-xl rounded-xl py-8 px-6 w-32"
+            className="mic-shadow shadow-2xl shadow-blu text-xl rounded-xl py-8 px-6 "
             onClick={() => {
               console.log("starting to record");
               props.startRecording();
             }}
             key={"record"}
           >
-            Record
+            <span className="block w-20">Record</span>
           </Button>
         )}
         {props.isRecording && (
