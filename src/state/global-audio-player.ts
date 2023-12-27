@@ -8,7 +8,6 @@ interface AudioPlayerState {
 interface AudioPlayerActions {
   setVisible: (value: boolean) => void;
   setAudios3Key: (source: string) => void;
-
 }
 
 type AudioPlayer = AudioPlayerState & AudioPlayerActions;

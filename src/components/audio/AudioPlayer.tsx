@@ -13,6 +13,10 @@ import ProgressBar from "./ProgressBar";
 import { create } from "zustand";
 
 interface AudioPlayerState {
+  audioRef?: RefObject<HTMLAudioElement>;
+  progressBarRef?: RefObject<HTMLInputElement>;
+  setAudioRef: (audioRef: RefObject<HTMLAudioElement>) => void;
+  setProgressBarRef: (progressBarRef: RefObject<HTMLInputElement>) => void;
   duration: number;
   setDuration: (duration: number) => void;
   timeProgress: number;
@@ -23,8 +27,17 @@ interface AudioPlayerState {
   disabled: boolean;
   durationLoaded: boolean;
   setDurationLoaded: (durationLoaded: boolean) => void;
+
+  loadWithDuration: (duration: number) => void;
+  seek: (time: number) => void;
+  seekAndPlay: (time: number) => void;
 }
-const useAudioPlayerState = create<AudioPlayerState>((set, get) => ({
+
+export const useAudioPlayer = create<AudioPlayerState>((set, get) => ({
+  audioRef: undefined,
+  progressBarRef: undefined,
+  setAudioRef: (audioRef) => set({ audioRef }),
+  setProgressBarRef: (progressBarRef) => set({ progressBarRef }),
   duration: 0,
   setDuration: (duration) => set({ duration }),
   timeProgress: 0,
@@ -35,6 +48,36 @@ const useAudioPlayerState = create<AudioPlayerState>((set, get) => ({
   disabled: false,
   durationLoaded: false,
   setDurationLoaded: (durationLoaded) => set({ durationLoaded }),
+
+  loadWithDuration: (duration) => {
+    console.log("loadWithDuration", duration);
+    set({ duration });
+    setTimeout(() => {
+      document
+        .getElementById("progress-bar")
+        ?.setAttribute("max", duration.toString());
+    }, 100);
+  },
+
+  seek: (time: number) => {
+    setTimeout(() => {
+      console.log(document.getElementById("audio-player"));
+      const state = get();
+      if (state.audioRef && state.audioRef.current)
+        state.audioRef.current.currentTime = time;
+    }, 10);
+  },
+
+  seekAndPlay: (time: number) => {
+    set({ isPlaying: true });
+    setTimeout(() => {
+      const state = get();
+      if (state.audioRef && state.audioRef.current) {
+        state.audioRef.current.currentTime = time;
+        state.audioRef.current.play();
+      }
+    }, 10);
+  },
 }));
 
 interface AudioPlayerProps {
@@ -57,13 +100,18 @@ const AudioPlayer = ({
     setTimeProgress,
     isPlaying,
     setIsPlaying,
-    durationLoaded,
-    setDurationLoaded,
-  } = useAudioPlayerState();
+    setAudioRef,
+    setProgressBarRef,
+  } = useAudioPlayer();
 
   // reference
   const audioRef = useRef<HTMLAudioElement>(null);
   const progressBarRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    setAudioRef(audioRef);
+    setProgressBarRef(progressBarRef);
+  }, []);
 
   useEffect(() => {
     if (autoPlay && source != "") {
@@ -72,18 +120,11 @@ const AudioPlayer = ({
     }
   }, [source, autoPlay, audioRef]);
 
-  useEffect(() => {
-    if (!durationLoaded && progressBarRef.current) {
-      progressBarRef.current.max = (timeProgress + 1).toString();
-      onLoadedMetadata();
-    }
-  }, [timeProgress, durationLoaded]);
-
   const onLoadedMetadata = () => {
     if (audioRef.current) {
-      const seconds = audioRef.current.duration;
+      let seconds = audioRef.current.duration;
+
       if (isFinite(seconds)) {
-        setDurationLoaded(true);
         setDuration(seconds);
         if (progressBarRef.current)
           progressBarRef.current.max = seconds.toString();
@@ -103,8 +144,7 @@ const AudioPlayer = ({
         ref={audioRef}
         onLoadedMetadata={onLoadedMetadata}
         onEnded={handleEnd}
-        className="w-full"
-        autoPlay
+        id="audio-player"
       />
       <div className="audio-player">
         <div className="flex  gap-2 md:container">
@@ -117,7 +157,6 @@ const AudioPlayer = ({
               isPlaying,
               setIsPlaying,
               disabled,
-              durationLoaded,
               togglePlayPause,
             }}
           />
@@ -127,7 +166,6 @@ const AudioPlayer = ({
               audioRef,
               timeProgress,
               duration,
-              durationLoaded,
             }}
           />
         </div>

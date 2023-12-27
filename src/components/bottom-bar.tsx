@@ -5,7 +5,7 @@ import { Button } from "./ui/button";
 import { Mic } from "lucide-react";
 import { cn, createAudioSourceFromKey } from "@/lib/utils";
 import { AUDIO_PLAYER_HEIGHT, BOTTOM_BAR_HEIGHT } from "@/lib/constants";
-import AudioPlayer from "./audio/AudioPlayer";
+import AudioPlayer, { useAudioPlayer } from "./audio/AudioPlayer";
 import { useAudioPlayerState } from "@/state/global-audio-player";
 
 const PATHS = {

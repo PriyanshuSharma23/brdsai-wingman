@@ -17,7 +17,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
-import AudioPlayer from "@/components/audio/AudioPlayer";
+import AudioPlayer, { useAudioPlayer } from "@/components/audio/AudioPlayer";
 import { NavWrapper } from "@/components/nav-parent";
 import { ArrowLeft } from "lucide-react";
 
@@ -27,7 +27,7 @@ import { useForm } from "react-hook-form";
 import { PlusCircle } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { AddPatientModal } from "@/components/patient-modal";
 import { useAllPatientQuery } from "@/queries/patient/all-patients-query";
 import { useCreateRecordingMutation } from "@/queries/recording/create-recording-mutaion";
@@ -73,14 +73,20 @@ export const SaveRecording = (props: SaveRecordingProps) => {
       },
       {
         onSuccess: (data) => {
-          router.push("/recordings/" + data.id);
+          router.replace("/recordings/" + data.id);
         },
-      },
+      }
     );
   };
 
+  const loadWithDuration = useAudioPlayer((s) => s.loadWithDuration);
+
   const [modalOpen, setModalOpen] = useState(false);
   const closeModal = () => setModalOpen(false);
+
+  useEffect(() => {
+    loadWithDuration(props.duration);
+  }, [props.duration]);
 
   return (
     <>
@@ -179,9 +185,10 @@ export const SaveRecording = (props: SaveRecordingProps) => {
                     }}
                   />
                   <div className="pt-2"></div>
-                  <Button type="submit" className="w-full rounded-full"
+                  <Button
+                    type="submit"
+                    className="w-full rounded-full"
                     disabled={createRecordingMutation.isPending}
-
                   >
                     Save Recording
                   </Button>

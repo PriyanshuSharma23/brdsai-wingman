@@ -22,7 +22,13 @@ export const useRecordingQuery = ({ recordingId }: UseRecordingQueryProps) => {
         throw new Error("Error fetching patients");
       }
 
-      return resp.data as { recording: Recording; patient: Patient };
+      return {
+        ...resp.data,
+        recording: {
+          ...resp.data.recording,
+          duration: resp.data.recording.duration / 1000,
+        },
+      } as { recording: Recording; patient: Patient };
     },
     refetchOnWindowFocus: false,
   });

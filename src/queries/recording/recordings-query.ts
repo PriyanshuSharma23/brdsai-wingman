@@ -16,7 +16,13 @@ export const useAllRecordingsQuery = () => {
         throw new Error("Error fetching recordings");
       }
 
-      return resp.data as { recording: Recording; patient: Patient }[];
+      return resp.data.map((e: any) => ({
+        patient: e.patient,
+        recording: {
+          ...e.recording,
+          duration: (e.recording.duration ?? 0) / 1000,
+        },
+      })) as { recording: Recording; patient: Patient }[];
     },
     refetchOnWindowFocus: false,
   });

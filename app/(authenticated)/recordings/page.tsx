@@ -5,6 +5,7 @@ import {
   Clock,
   Mic,
   MoreVertical,
+  Pause,
   Play,
   Search,
   SlidersHorizontal,
@@ -19,6 +20,7 @@ import { PatientCard } from "../patients/patient-card";
 import { parseTimestamp } from "@/lib/utils";
 import { useAudioPlayerState } from "@/state/global-audio-player";
 import { EmptyRecordings } from "./empty-recordings";
+import { useAudioPlayer } from "@/components/audio/AudioPlayer";
 
 export default function RecordingsPage() {
   const router = useRouter();
@@ -74,6 +76,7 @@ export default function RecordingsPage() {
                       ? parseTimestamp(recording.recording.duration, 2)
                       : "--:--"
                   }
+                  durationNumber={recording.recording.duration ?? undefined}
                   audioKey={recording.recording.s3Key}
                 />
               );
@@ -92,16 +95,34 @@ type AudioCardProps = {
   duration: string;
   recordedBy: string;
   audioKey: string;
+  durationNumber?: number;
 };
 function AudioCard(props: AudioCardProps) {
   const { audioS3Key, setAudios3Key, setVisible } = useAudioPlayerState();
+  const { loadWithDuration } = useAudioPlayer();
 
-  function playAudio(e: any) {
-    e.preventDefault();
-    e.stopPropagation();
+  function playAudio() {
     setAudios3Key(props.audioKey);
     setVisible(true);
+    if (props.durationNumber) {
+      loadWithDuration(props.durationNumber);
+    }
   }
+
+  const isPlaying = useAudioPlayer((s) => s.isPlaying);
+  const togglePlayPause = useAudioPlayer((s) => s.togglePlayPause);
+
+  function handleAction(e: any) {
+    e.preventDefault();
+    e.stopPropagation();
+
+    if (audioS3Key === props.audioKey) {
+      togglePlayPause();
+    } else {
+      playAudio();
+    }
+  }
+
   return (
     <Link href={"/recordings/" + props.id} className="block">
       <div className="flex w-full p-3 border rounded-md items-center gap-1 ">
@@ -124,9 +145,17 @@ function AudioCard(props: AudioCardProps) {
         </div>
         <button
           className="w-8 h-8 bg-gray-100 border border-gray-200 rounded-full grid place-content-center flex-shrink-0"
-          onClick={playAudio}
+          onClick={handleAction}
         >
-          <Play size={18} className="text-blu translate-x-[1px]" />
+          {audioS3Key === props.audioKey ? (
+            isPlaying ? (
+              <Pause size={18} className="text-blu translate-x-[1px]" />
+            ) : (
+              <Play size={18} className="text-blu translate-x-[1px]" />
+            )
+          ) : (
+            <Play size={18} className="text-blu translate-x-[1px]" />
+          )}
         </button>
         <button>
           <MoreVertical size={18} className="text-gray-400" />

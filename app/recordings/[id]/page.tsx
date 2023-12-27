@@ -4,8 +4,10 @@ import { Search } from "lucide-react";
 import { TranscriptSegment } from "./transcript-segment";
 import { useRecordingQuery } from "@/queries/recording/recording-query";
 import { useTranscriptByRecordingQuery } from "@/queries/transcript/transcript-by-recording-id-query";
-import AudioPlayer from "@/components/audio/AudioPlayer";
+import AudioPlayer, { useAudioPlayer } from "@/components/audio/AudioPlayer";
 import { createAudioSourceFromKey } from "@/lib/utils";
+import { useEffect } from "react";
+import { ActionsNav } from "../recording-nav";
 
 type RecordingPageParams = {
   params: {
@@ -18,6 +20,8 @@ export default function RecordingsPage(params: RecordingPageParams) {
     recordingId: Number(params.params.id),
   });
 
+  console.log(recordingQuery.data);
+
   const transcriptQuery = useTranscriptByRecordingQuery({
     recordingId: Number(params.params.id),
   });
@@ -25,8 +29,31 @@ export default function RecordingsPage(params: RecordingPageParams) {
   const key = recordingQuery.data?.recording.s3Key;
   console.log(createAudioSourceFromKey(key ?? ""));
 
+  const loadWithDuration = useAudioPlayer((s) => s.loadWithDuration);
+  const seekAndPlay = useAudioPlayer((s) => s.seekAndPlay);
+  const timeProgress = useAudioPlayer((s) => s.timeProgress);
+
+  useEffect(() => {
+    loadWithDuration(Number(recordingQuery.data?.recording.duration));
+  }, [recordingQuery.data]);
+
+  const isActive = (timestamp: number, start: number, end: number) => {
+    return timestamp >= start && timestamp <= end;
+  };
+
   return (
     <>
+      <ActionsNav
+        resourceName="recording"
+        fallbackBackRoute="/recordings"
+        name={"Consultation with Naman"}
+        onEdit={function (newName: string): void {
+          throw new Error("Function not implemented.");
+        }}
+        onDelete={function (): void {
+          throw new Error("Function not implemented.");
+        }}
+      />
       <div className="container space-y-2 md:space-y-4 sticky top-20 bg-white">
         <h1 className="text-lg pt-5" style={{ fontWeight: 500 }}>
           Transcription
@@ -44,7 +71,15 @@ export default function RecordingsPage(params: RecordingPageParams) {
             transcript={transcriptSegment.text}
             timeSegments={2}
             key={transcriptSegment.start}
-            active
+            active={isActive(
+              timeProgress,
+              Number(transcriptSegment.start),
+              Number(transcriptSegment.end)
+            )}
+            onClick={() => {
+              console.log("seeking");
+              seekAndPlay(Number(transcriptSegment.start));
+            }}
           />
         ))}
       </div>
