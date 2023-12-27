@@ -20,6 +20,7 @@ import { Note } from "@/components/svgs/note";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ChipCard } from "@/components/chip-card";
 import Link from "next/link";
+import { CreateNewNote } from "./create-new-note";
 
 type RecordingPageParams = {
   params: {
@@ -33,6 +34,7 @@ export default function RecordingsPage(params: RecordingPageParams) {
   });
 
   console.log(recordingQuery.data);
+  const [createNewNoteOpen, setCreateNewNoteOpen] = useState(false);
 
   const transcriptQuery = useTranscriptByRecordingQuery({
     recordingId: Number(params.params.id),
@@ -206,7 +208,10 @@ export default function RecordingsPage(params: RecordingPageParams) {
 
       <div className="w-full bg-white py-6 fixed bottom-0 inset-x-0 border-t ">
         <div className="pb-4 w-full bg-white border-b px-4 gap-2 grid place-content-stretch">
-          <Button className="w-full rounded-full max-w-sm mx-auto">
+          <Button
+            className="w-full rounded-full max-w-lg mx-auto"
+            onClick={() => setCreateNewNoteOpen(true)}
+          >
             New note from recording
             <Plus size={18} className="ml-2" />
           </Button>
@@ -218,6 +223,13 @@ export default function RecordingsPage(params: RecordingPageParams) {
           />
         </div>
       </div>
+      <CreateNewNote
+        open={!!recordingQuery.data && createNewNoteOpen}
+        onOpenChange={setCreateNewNoteOpen}
+        closeWindow={() => setCreateNewNoteOpen(false)}
+        recordingName={recordingQuery.data?.recording.recordingName ?? "---"}
+        recordingId={Number(params.params.id)}
+      />
     </>
   );
 }
