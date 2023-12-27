@@ -1,14 +1,17 @@
 import request from "@/lib/customAxios";
 import { useQuery } from "@tanstack/react-query";
 import { Transcript } from "@/types/Transcript";
+import { useEffect, useState } from "react";
 
 type UseTranscriptByRecordingQueryProps = {
   recordingId: number;
 };
 export const useTranscriptByRecordingQuery = (
-  props: UseTranscriptByRecordingQueryProps,
+  props: UseTranscriptByRecordingQueryProps
 ) => {
-  return useQuery({
+  const [refetchInterval, setRefetchInterval] = useState<number | false>(1000);
+
+  const transcriptQuery = useQuery({
     queryKey: ["transcript", "by-recording", props.recordingId],
     queryFn: async (params) => {
       let [, , recordingId] = params.queryKey as [string, string, number];
@@ -25,6 +28,21 @@ export const useTranscriptByRecordingQuery = (
 
       return resp.data as Transcript;
     },
+    refetchInterval,
     refetchOnWindowFocus: false,
   });
+
+  useEffect(() => {
+    if (transcriptQuery.data) {
+      if (transcriptQuery.data.isProcessed === true) {
+        setRefetchInterval(false);
+      }
+    }
+  }, [
+    transcriptQuery.data,
+    transcriptQuery.isLoading,
+    transcriptQuery.isFetching,
+  ]);
+
+  return transcriptQuery;
 };
