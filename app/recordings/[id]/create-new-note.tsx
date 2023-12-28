@@ -89,7 +89,7 @@ export function CreateNewNote({
           toast.success("Note created successfully");
           closeWindow();
         },
-      },
+      }
     );
   };
 

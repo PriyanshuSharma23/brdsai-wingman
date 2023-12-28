@@ -75,7 +75,7 @@ const PatientsPage = () => {
               return (
                 <PatientCard
                   name={patient.name}
-                  mrn={patient.uniqueId ?? "---"}
+                  mrn={patient.uniqueId}
                   key={patient.id}
                   id={patient.id}
                 />

@@ -21,6 +21,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ChipCard } from "@/components/chip-card";
 import Link from "next/link";
 import { CreateNewNote } from "./create-new-note";
+import { useNotesByRecordingQuery } from "@/queries/recording/note-by-recording-query";
+import { NoteCard } from "@/components/note-card";
 
 type RecordingPageParams = {
   params: {
@@ -40,10 +42,12 @@ export default function RecordingsPage(params: RecordingPageParams) {
     recordingId: Number(params.params.id),
   });
 
+  const notesQuery = useNotesByRecordingQuery(Number(params.params.id));
+
   const key = recordingQuery.data?.recording.s3Key;
   console.log(createAudioSourceFromKey(key ?? ""));
 
-  const [isOpen, setIsOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(true);
   const loadWithDuration = useAudioPlayer((s) => s.loadWithDuration);
   const seekAndPlay = useAudioPlayer((s) => s.seekAndPlay);
   const timeProgress = useAudioPlayer((s) => s.timeProgress);
@@ -71,17 +75,17 @@ export default function RecordingsPage(params: RecordingPageParams) {
       />
 
       <Tabs defaultValue="overview">
-        <div className="">
+        <div className="sticky top-[4.5rem] bg-white z-10">
           <TabsList className="grid w-full grid-cols-2 bg-white ">
             <TabsTrigger
               value="overview"
-              className="rounded-none border-b data-[state=active]:text-blu data-[state=active]:border-b-blu/70 data-[state=active]:border-b-2 text-md font-normal"
+              className="rounded-none border-b data-[state=active]:text-blu data-[state=active]:border-b-blu/70 data-[state=active]:border-b-2 text-md font-normal bg-white"
             >
               Overview
             </TabsTrigger>
             <TabsTrigger
               value="transcript"
-              className="rounded-none border-b data-[state=active]:text-blu data-[state=active]:border-b-blu/70 data-[state=active]:border-b-2 text-md font-normal"
+              className="rounded-none border-b data-[state=active]:text-blu data-[state=active]:border-b-blu/70 data-[state=active]:border-b-2 text-md font-normal bg-white"
             >
               Transcript
             </TabsTrigger>
@@ -120,7 +124,11 @@ export default function RecordingsPage(params: RecordingPageParams) {
               <div className="relative">
                 <ChipCard
                   title={recordingQuery.data?.patient.name ?? "---"}
-                  content={recordingQuery.data?.patient.uniqueId ?? "---"}
+                  content={
+                    recordingQuery.data?.patient.uniqueId ?? (
+                      <span className="italic">No MRN provided</span>
+                    )
+                  }
                   contnetIcon={<div></div>}
                 />
 
@@ -167,22 +175,30 @@ export default function RecordingsPage(params: RecordingPageParams) {
                   </Button>
                 </CollapsibleTrigger>
               </div>
-              <CollapsibleContent className="space-y-2"></CollapsibleContent>
+              <CollapsibleContent className="space-y-4">
+                {notesQuery.data?.map((note) => (
+                  <NoteCard
+                    key={note.id}
+                    name={note.title ?? "Unnamed note"}
+                    // date in DD/MM/YYYY
+                    date={new Date(note.createdAt).toLocaleDateString("en-US")}
+                    format={note.noteFormat}
+                  />
+                ))}
+              </CollapsibleContent>
             </Collapsible>
           </div>
+          <div className="pt-48"></div>
         </TabsContent>
         <TabsContent value="transcript">
-          <div className="container space-y-2 md:space-y-4 sticky top-20 bg-white">
-            <h1 className="text-lg pt-5" style={{ fontWeight: 500 }}>
-              Transcription
-            </h1>
+          <div className="container space-y-2 md:space-y-4 sticky top-[7.1rem] bg-white text-neutral-600 pt-4">
             <SearchIconInput
               icon={<Search size={16} className="stroke-gray-400" />}
               placeholder="Search keywords"
             />
           </div>
 
-          <div className="container space-y-4 py-6 flex-1">
+          <div className="container space-y-4 py-6 flex-1 text-neutral-500">
             {transcriptQuery.data?.segments?.map((transcriptSegment) => (
               <TranscriptSegment
                 timestamp={Number(transcriptSegment.start)}
@@ -202,7 +218,7 @@ export default function RecordingsPage(params: RecordingPageParams) {
             ))}
           </div>
 
-          <div className="pt-32"></div>
+          <div className="pt-96"></div>
         </TabsContent>
       </Tabs>
 
@@ -227,8 +243,8 @@ export default function RecordingsPage(params: RecordingPageParams) {
         open={!!recordingQuery.data && createNewNoteOpen}
         onOpenChange={setCreateNewNoteOpen}
         closeWindow={() => setCreateNewNoteOpen(false)}
-        recordingName={recordingQuery.data?.recording.recordingName ?? "---"}
         recordingId={Number(params.params.id)}
+        recordingName={recordingQuery.data?.recording.recordingName ?? ""}
       />
     </>
   );

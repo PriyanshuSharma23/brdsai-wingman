@@ -20,7 +20,7 @@ type PatientPageProps = {
   };
 };
 const PatientPage = ({ params }: PatientPageProps) => {
-  const [isOpen, setIsOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(true);
 
   const patientQuery = usePatientQuery({
     patientId: Number(params.id),

@@ -15,9 +15,8 @@ export const useCreateNoteMutation = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationKey: ["recording", "create"],
+    mutationKey: ["note", "create"],
     mutationFn: async (params: MutationParams) => {
-
       let response = await request({
         method: "POST",
         url: "/brdsai/wingman/recording/createNote",
@@ -31,8 +30,7 @@ export const useCreateNoteMutation = () => {
       return response.data as Note;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["recording"] });
+      queryClient.invalidateQueries({ queryKey: ["note"] });
     },
   });
 };
-

@@ -4,7 +4,7 @@ import Link from "next/link";
 type PatientCardProps = {
   id: number;
   name: string;
-  mrn: string;
+  mrn?: string;
 };
 
 export const PatientCard = (props: PatientCardProps) => {
@@ -12,7 +12,9 @@ export const PatientCard = (props: PatientCardProps) => {
     <Link href={`/patients/${props.id}`} className="block">
       <ChipCard
         title={props.name}
-        content={props.mrn}
+        content={props.mrn ?? 
+          <span className="italic">No MRN provided</span>
+        }
         titleIcon={
           <svg
             viewBox="0 0 18 18"
