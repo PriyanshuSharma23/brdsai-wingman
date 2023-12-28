@@ -10,7 +10,7 @@ type TranscriptSegmentProps = {
 
 export const TranscriptSegment = (props: TranscriptSegmentProps) => {
   return (
-    <p className={cn("", props.active && "text-blu")} onClick={props.onClick}>
+    <p className={cn("cursor-pointer", props.active && "text-blu")} onClick={props.onClick}>
       <span className="font-mono">
         [{parseTimestamp(props.timestamp, props.timeSegments)}]
       </span>{" "}

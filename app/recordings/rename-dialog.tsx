@@ -14,7 +14,7 @@ type RenameDialogProps = {
   setOpen: Dispatch<SetStateAction<boolean>>;
   name: string;
   onEdit: (newName: string) => void;
-  resourceName: "patient" | "recording";
+  resourceName: "patient" | "recording" | "note";
 };
 
 export const RenameDialog = ({
@@ -73,4 +73,4 @@ export const RenameDialog = ({
 
 const toWordCase = (resource: string) => {
   return resource[0].toUpperCase() + resource.slice(1);
-}
+};

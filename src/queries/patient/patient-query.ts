@@ -22,5 +22,6 @@ export const usePatientQuery = ({ patientId }: UsePatientQueryProps) => {
       return resp.data as Patient;
     },
     refetchOnWindowFocus: false,
+    enabled: patientId !== -1,
   });
 };

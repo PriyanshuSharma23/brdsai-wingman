@@ -16,14 +16,26 @@ export const useAllRecordingsQuery = () => {
         throw new Error("Error fetching recordings");
       }
 
-      return resp.data.map((e: any) => ({
+      let data = resp.data.map((e: any) => ({
         patient: e.patient,
         recording: {
           ...e.recording,
           duration: (e.recording.duration ?? 0) / 1000,
         },
       })) as { recording: Recording; patient: Patient }[];
+
+      data.sort((a, b) => {
+        let bD = dateToNumber(new Date(b.recording.createdAt));
+        let aD = dateToNumber(new Date(a.recording.createdAt));
+        return bD - aD;
+      });
+
+      return data;
     },
     refetchOnWindowFocus: false,
   });
 };
+
+function dateToNumber(date: Date) {
+  return date.getTime();
+}

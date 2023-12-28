@@ -16,7 +16,7 @@ export const useTranscriptQuery = ({ transcriptId }: UseTranscriptQueryProps) =>
       });
 
       if (resp.status !== 200) {
-        throw new Error("Error fetching patients");
+        throw new Error("Error fetching transcript");
       }
 
       return resp.data as Transcript;

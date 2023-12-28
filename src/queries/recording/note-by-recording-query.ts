@@ -19,7 +19,10 @@ export const useNotesByRecordingQuery = (
         throw new Error("Error fetching notes");
       }
 
-      return response.data as Note[];
+      let data = response.data as Note[];
+      let reversedData = data.reverse();
+
+      return reversedData;
     },
     enabled: !disabled,
   });

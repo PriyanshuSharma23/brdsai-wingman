@@ -80,7 +80,9 @@ export function CreateNewNote({
   const onSubmit = (values: z.infer<typeof createNoteSchema>) => {
     createNoteMutation.mutate(
       {
-        ...values,
+        noteFormat: values.noteFormat,
+        noteSetting: values.noteSetting,
+        preferredLength: values.preferredLength,
         recordingId,
         customPrompt: values.additionalPrompt,
       },

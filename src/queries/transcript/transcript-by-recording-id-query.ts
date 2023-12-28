@@ -1,7 +1,7 @@
 import request from "@/lib/customAxios";
 import { useQuery } from "@tanstack/react-query";
 import { Transcript } from "@/types/Transcript";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 type UseTranscriptByRecordingQueryProps = {
   recordingId: number;
@@ -9,7 +9,8 @@ type UseTranscriptByRecordingQueryProps = {
 export const useTranscriptByRecordingQuery = (
   props: UseTranscriptByRecordingQueryProps
 ) => {
-  const [refetchInterval, setRefetchInterval] = useState<number | false>(1000);
+  const [refetchInterval, setRefetchInterval] = useState<number | false>(5000);
+  const callCount = useRef(0);
 
   const transcriptQuery = useQuery({
     queryKey: ["transcript", "by-recording", props.recordingId],
@@ -46,3 +47,24 @@ export const useTranscriptByRecordingQuery = (
 
   return transcriptQuery;
 };
+
+function logarithmicInterpolation(
+  minInterval: number,
+  maxInterval: number,
+  callCount: number
+) {
+  console.log("called");
+  // Ensure callCount is at least 1
+  callCount = Math.max(callCount, 1);
+
+  // Calculate the logarithmic interpolation factor
+  const interpolationFactor = Math.log(callCount);
+
+  // Map the interpolation factor to the range [0, 1]
+  const normalizedFactor = interpolationFactor / Math.log(callCount);
+
+  // Interpolate between minInterval and maxInterval
+  const result = minInterval + normalizedFactor * (maxInterval - minInterval);
+
+  return result;
+}

@@ -12,7 +12,7 @@ type RecordingNavProps = {
   name: string;
   onEdit: (newName: string) => void;
   onDelete: () => void;
-  resourceName: "patient" | "recording";
+  resourceName: "patient" | "recording" | "note";
   fallbackBackRoute?: string;
 };
 
@@ -32,9 +32,9 @@ export const ActionsNav = (props: RecordingNavProps) => {
     <>
       <NavWrapper>
         <div className="flex items-center text-primary gap-2">
-            <button className="translate-y-[2px]" onClick={back}>
-              <ArrowLeft size={20} className="text-gray-500" />
-            </button>
+          <button className="translate-y-[2px]" onClick={back}>
+            <ArrowLeft size={20} className="text-gray-500" />
+          </button>
           <p className="w-[20ch] overflow-hidden text-ellipsis line-clamp-1 max-w-max">
             {props.name}
           </p>
@@ -47,7 +47,11 @@ export const ActionsNav = (props: RecordingNavProps) => {
           </button>
         </div>
 
-        <Button className="self-center" variant={"ghost"}>
+        <Button
+          className="self-center"
+          variant={"ghost"}
+          onClick={props.onDelete}
+        >
           <Trash2 size={18} className="text-gray-500" />
         </Button>
       </NavWrapper>

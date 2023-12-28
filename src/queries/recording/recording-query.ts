@@ -31,5 +31,6 @@ export const useRecordingQuery = ({ recordingId }: UseRecordingQueryProps) => {
       } as { recording: Recording; patient: Patient };
     },
     refetchOnWindowFocus: false,
+    enabled: recordingId !== -1,
   });
 };

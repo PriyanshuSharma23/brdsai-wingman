@@ -8,16 +8,16 @@ import ClientOnly from "./client-only";
 export const Navbar = () => {
   const { user } = useStore();
   return (
-    <ClientOnly>
-      <NavWrapper>
-        <Image
-          src={"/Logo-small.png"}
-          alt="brds"
-          width={273}
-          height={78}
-          className="w-36"
-          priority
-        />
+    <NavWrapper>
+      <Image
+        src={"/Logo-small.png"}
+        alt="brds"
+        width={273}
+        height={78}
+        className="w-36"
+        priority
+      />
+      <ClientOnly>
         <Avatar>
           {!!user ? (
             <AvatarFallback
@@ -33,8 +33,8 @@ export const Navbar = () => {
             ></AvatarFallback>
           )}
         </Avatar>
-      </NavWrapper>
-    </ClientOnly>
+      </ClientOnly>
+    </NavWrapper>
   );
 };
 // <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />

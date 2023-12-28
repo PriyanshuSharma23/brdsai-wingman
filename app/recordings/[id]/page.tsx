@@ -23,6 +23,10 @@ import Link from "next/link";
 import { CreateNewNote } from "./create-new-note";
 import { useNotesByRecordingQuery } from "@/queries/recording/note-by-recording-query";
 import { NoteCard } from "@/components/note-card";
+import { useDeleteRecordingMutation } from "@/queries/recording/delete-recording-mutation";
+import { useRouter } from "next/navigation";
+import { toast } from "sonner";
+import { ArrowPatientCard } from "@/components/arrow-patient-card";
 
 type RecordingPageParams = {
   params: {
@@ -60,17 +64,26 @@ export default function RecordingsPage(params: RecordingPageParams) {
     return timestamp >= start && timestamp <= end;
   };
 
+  const deleteMutation = useDeleteRecordingMutation();
+  const router = useRouter();
+
   return (
     <>
       <ActionsNav
         resourceName="recording"
         fallbackBackRoute="/recordings"
         name={recordingQuery.data?.recording.recordingName ?? "Loading..."}
-        onEdit={function (newName: string): void {
-          throw new Error("Function not implemented.");
-        }}
+        onEdit={function (newName: string): void {}}
         onDelete={function (): void {
-          throw new Error("Function not implemented.");
+          deleteMutation.mutate(params.params.id, {
+            onSuccess: () => {
+              toast.success("Recording deleted");
+              router.push("/recordings");
+            },
+            onError: () => {
+              toast.error("Error deleting recording");
+            },
+          });
         }}
       />
 
@@ -120,36 +133,11 @@ export default function RecordingsPage(params: RecordingPageParams) {
               <p>Associated Patient</p>
             </div>
             <div className="pt-2"></div>
-            <Link href={"/patients/" + recordingQuery.data?.patient.id}>
-              <div className="relative">
-                <ChipCard
-                  title={recordingQuery.data?.patient.name ?? "---"}
-                  content={
-                    recordingQuery.data?.patient.uniqueId ?? (
-                      <span className="italic">No MRN provided</span>
-                    )
-                  }
-                  contnetIcon={<div></div>}
-                />
-
-                <svg
-                  width="23"
-                  height="18"
-                  viewBox="0 0 23 18"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="absolute top-1/2 -translate-y-1/2 right-6"
-                >
-                  <path
-                    d="M22 9L1 8.99999M22 9L14.125 16.875M22 9L14.125 1.125"
-                    stroke="#035879"
-                    strokeWidth="1.96875"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                </svg>
-              </div>
-            </Link>
+            <ArrowPatientCard
+              name={recordingQuery.data?.patient.name}
+              uniqueId={recordingQuery.data?.patient.uniqueId}
+              patientId={recordingQuery.data?.patient.id.toString()}
+            />
             <div className="pt-2"></div>
           </div>
 
@@ -175,7 +163,7 @@ export default function RecordingsPage(params: RecordingPageParams) {
                   </Button>
                 </CollapsibleTrigger>
               </div>
-              <CollapsibleContent className="space-y-4">
+              <CollapsibleContent className=" flex flex-col gap-4">
                 {notesQuery.data?.map((note) => (
                   <NoteCard
                     key={note.id}
@@ -183,6 +171,7 @@ export default function RecordingsPage(params: RecordingPageParams) {
                     // date in DD/MM/YYYY
                     date={new Date(note.createdAt).toLocaleDateString("en-US")}
                     format={note.noteFormat}
+                    noteId={note.id}
                   />
                 ))}
               </CollapsibleContent>
@@ -199,6 +188,11 @@ export default function RecordingsPage(params: RecordingPageParams) {
           </div>
 
           <div className="container space-y-4 py-6 flex-1 text-neutral-500">
+            {!transcriptQuery.data?.isProcessed && (
+              <div className="flex items-center gap-2 text-neutral-500 justify-center">
+                <p className="text-center">Transcript is being processed</p>
+              </div>
+            )}
             {transcriptQuery.data?.segments?.map((transcriptSegment) => (
               <TranscriptSegment
                 timestamp={Number(transcriptSegment.start)}
@@ -208,7 +202,7 @@ export default function RecordingsPage(params: RecordingPageParams) {
                 active={isActive(
                   timeProgress,
                   Number(transcriptSegment.start),
-                  Number(transcriptSegment.end),
+                  Number(transcriptSegment.end)
                 )}
                 onClick={() => {
                   console.log("seeking");
