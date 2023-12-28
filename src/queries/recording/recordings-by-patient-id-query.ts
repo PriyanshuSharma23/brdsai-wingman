@@ -23,7 +23,12 @@ export const useRecordingsByPatient = ({
         throw new Error("Error fetching recordings of patient");
       }
 
-      return resp.data as Recording[];
+      return resp.data.map((rec: any) => {
+        return {
+          ...rec,
+          duration: rec.duration / 1000,
+        };
+      }) as Recording[];
     },
     refetchOnWindowFocus: false,
   });

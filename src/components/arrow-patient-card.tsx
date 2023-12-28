@@ -16,7 +16,7 @@ export const ArrowPatientCard = ({
         <ChipCard
           title={name ?? "---"}
           content={uniqueId ?? <span className="italic">No MRN provided</span>}
-          contnetIcon={<div></div>}
+          contentIcon={<div></div>}
         />
 
         <svg

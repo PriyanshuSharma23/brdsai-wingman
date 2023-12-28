@@ -1,10 +1,21 @@
+"use client";
 import { Button } from "@/components/ui/button";
 import { PatientCard } from "./patients/patient-card";
 import { ArrowRight, Mic, PlusIcon } from "lucide-react";
 import { ChipCard } from "@/components/chip-card";
 import { Note } from "@/components/svgs/note";
+import { useAllPatientQuery } from "@/queries/patient/all-patients-query";
+import Link from "next/link";
+import { useAllRecordingsQuery } from "@/queries/recording/recordings-query";
+import Image from "next/image";
 
 export default function Home() {
+  const patientsQuery = useAllPatientQuery();
+  const patients = patientsQuery.data?.slice(0, 5);
+
+  const recordingsQuery = useAllRecordingsQuery();
+  const recordings = recordingsQuery.data?.slice(0, 5);
+
   return (
     <>
       <div className="px-4 md:px-12 xl:px-20 space-y-2 md:space-y-4 text-neutral-600 pt-6">
@@ -16,49 +27,62 @@ export default function Home() {
         </div>
 
         <div className="flex gap-2 overflow-x-scroll no-scrollbar">
-          {new Array(10).fill(0).map((_, idx) => {
+          {patients?.map((patient, idx) => {
             return (
-              <div className="min-w-[12rem]" key={idx}>
-                <PatientCard name={"Adnan"} mrn={"MRN-5632-8975"} id={1} />
-              </div>
-            );
-          })}
-        </div>
-
-        <div className=""></div>
-
-        <Button className="rounded-full  px-10 w-full max-w-sm gap-1">
-          <span>View full list (42)</span>
-          <ArrowRight className="" size={16} />
-        </Button>
-
-        <div className="py-3 border-b border-gray-400/50"></div>
-
-        <div className="flex gap-2 items-center text-lg text-neutral-600 pt-4">
-          <Mic size={21} />
-          <p>Recordings (42)</p>
-        </div>
-
-        <div className="flex gap-2 overflow-x-scroll no-scrollbar">
-          {new Array(10).fill(0).map((_, idx) => {
-            return (
-              <div className="min-w-[12rem]" key={idx}>
-                <ChipCard
-                  titleIcon={<Mic size={15} />}
-                  title="05/23/2023 - Patient"
-                  contnetIcon={patient}
-                  content="Naman Dureja"
+              <div className="min-w-[12rem]" key={patient.id}>
+                <PatientCard
+                  name={patient.name}
+                  mrn={patient.uniqueId}
+                  id={patient.id}
                 />
               </div>
             );
           })}
         </div>
+
         <div className=""></div>
 
-        <Button className="rounded-full  px-10 w-full max-w-sm gap-1">
-          <span>New Recording</span>
-          <PlusIcon size={18} />
-        </Button>
+        <Link href="/patients">
+          <Button className="rounded-full  px-10 w-full max-w-sm gap-1">
+            <span>View full list ({patientsQuery.data?.length ?? "..."})</span>
+            <ArrowRight className="" size={16} />
+          </Button>
+        </Link>
+
+        <div className="py-3 border-b border-gray-400/50"></div>
+
+        <div className="flex gap-2 items-center text-lg text-neutral-600 pt-4">
+          <Mic size={21} />
+          <p>Recordings ({recordingsQuery.data?.length ?? "..."})</p>
+        </div>
+
+        <div className="flex gap-2 overflow-x-scroll no-scrollbar">
+          {recordings?.map((recording, idx) => {
+            return (
+              <Link
+                href={`/recordings/${recording.recording.id}`}
+                key={recording.recording.id}
+              >
+                <div className="min-w-[12rem]" key={idx}>
+                  <ChipCard
+                    titleIcon={<Mic size={15} />}
+                    title={recording.recording.recordingName}
+                    contentIcon={patient}
+                    content={recording.patient.name}
+                  />
+                </div>
+              </Link>
+            );
+          })}
+        </div>
+        <div className=""></div>
+
+        <Link href={"/record"}>
+          <Button className="rounded-full  px-10 w-full max-w-sm gap-1">
+            <span>New Recording</span>
+            <PlusIcon size={18} />
+          </Button>
+        </Link>
 
         <div className="py-3 border-b border-gray-400/50"></div>
 
@@ -73,14 +97,23 @@ export default function Home() {
                 <ChipCard
                   titleIcon={<Note className={"w-5"} />}
                   title="Note Name"
-                  contnetIcon={<Mic size={16} />}
+                  contentIcon={<Mic size={16} />}
                   content="Recording Name"
+                  key={idx}
                 />
               </div>
             );
           })}
         </div>
       </div>
+      <Image
+        src={"/onboarding-fig-1.png"}
+        alt="onboarding figure 1"
+        width={290}
+        height={343}
+        className={`w-3/4 bottom-0 left-0   fixed -z-50 max-w-md `}
+        priority
+      />
     </>
   );
 }
@@ -101,4 +134,3 @@ const patient = (
     />
   </svg>
 );
-
