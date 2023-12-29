@@ -105,7 +105,11 @@ export function AddPatientModal({
                 }}
               />
               <DialogFooter className="mt-4">
-                <Button type="submit" className="w-full rounded-full">
+                <Button
+                  type="submit"
+                  className="w-full rounded-full"
+                  disabled={createPatientMutation.isPending}
+                >
                   Add Patient
                 </Button>
               </DialogFooter>
