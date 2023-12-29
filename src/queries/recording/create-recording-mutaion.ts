@@ -22,7 +22,7 @@ export const useCreateRecordingMutation = () => {
       formData.set("patientId", params.patientId.toString());
       formData.set("duration", params.duration.toString());
       formData.set("recordingFile", params.recordingFile);
-      formData.set("extension", params.extension);
+      formData.set("extension", "");
 
       let response = await request({
         method: "POST",
