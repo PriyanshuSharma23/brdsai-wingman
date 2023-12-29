@@ -63,17 +63,9 @@ export const SaveRecording = (props: SaveRecordingProps) => {
     }
 
     let mime = props.recordingBlob.type
-    let extension: string;
+    let extension: string = "";
     console.log({ mime })
 
-    if (mime.includes("webm")) {
-      extension = ".webm";
-    } else if (mime.includes("mp4")){
-      extension = ".mp4";
-    } else {
-      toast.error("Unsupported audio type");
-      return;
-    }
 
     createRecordingMutation.mutate(
       {
