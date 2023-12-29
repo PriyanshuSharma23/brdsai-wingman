@@ -39,6 +39,12 @@ export const TranscriptVisualizer = (props: TranscriptVisualizerProps) => {
     }
   }, [browserSupportsSpeechRecognition, props.transcribe]);
 
+  useEffect(() => {
+    return () => {
+      setLastTranscript("");
+    }
+  }, []);
+
   return (
     <p className="text-center text-gray-400/80 max-w-[30ch] mx-auto h-24">
       {browserSupportsSpeechRecognition &&
