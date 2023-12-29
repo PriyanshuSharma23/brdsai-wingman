@@ -69,7 +69,7 @@ export const SaveRecording = (props: SaveRecordingProps) => {
     if (mime.includes("webm")) {
       extension = ".webm";
     } else if (mime.includes("mp4")){
-      extension = ".m4a";
+      extension = ".mp4";
     } else {
       toast.error("Unsupported audio type");
       return;
