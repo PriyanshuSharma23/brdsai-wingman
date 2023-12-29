@@ -7,6 +7,8 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 
+// import mime from "mime-types"
+
 import {
   Select,
   SelectContent,
@@ -32,6 +34,7 @@ import { AddPatientModal } from "@/components/patient-modal";
 import { useAllPatientQuery } from "@/queries/patient/all-patients-query";
 import { useCreateRecordingMutation } from "@/queries/recording/create-recording-mutaion";
 import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 
 const addPatientSchema = z.object({
   recordingName: z.string(),
@@ -58,18 +61,27 @@ export const SaveRecording = (props: SaveRecordingProps) => {
     if (!props.recordingBlob) {
       return;
     }
-    console.log({
-      patientId: Number(values.patient),
-      recordingFile: props.recordingBlob,
-      duration: props.duration * 1000,
-      recordingName: values.recordingName,
-    });
+
+    let mime = props.recordingBlob.type
+    let extension: string;
+    console.log({ mime })
+
+    if (mime.includes("webm")) {
+      extension = ".webm";
+    } else if (mime.includes("mp4")){
+      extension = ".m4a";
+    } else {
+      toast.error("Unsupported audio type");
+      return;
+    }
+
     createRecordingMutation.mutate(
       {
         patientId: Number(values.patient),
         recordingFile: props.recordingBlob,
         duration: props.duration * 1000,
         recordingName: values.recordingName,
+        extension: `${extension}`
       },
       {
         onSuccess: (data) => {
@@ -110,7 +122,7 @@ export const SaveRecording = (props: SaveRecordingProps) => {
               <Form {...form}>
                 <form
                   onSubmit={form.handleSubmit(onSubmit)}
-                  className="space-y-4 max-w-sm flex flex-col flex-1 "
+                  className="space-y-4  flex flex-col flex-1 "
                 >
                   <FormField
                     control={form.control}

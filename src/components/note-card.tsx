@@ -13,7 +13,7 @@ export const NoteCard = ({ date, name, format, noteId }: NoteCardProps) => {
   return (
     <Link href={"/notes/" + noteId}>
       <div className="bg-white border py-6 px-4 rounded-md relative isolate -z-10">
-        <div className="flex gap-2 items-center text-md text-gray-400 ">
+        <div className="flex gap-2 items-center text-md text-neutral-600">
           <Note className="w-5 stroke-gray-400 fill-gray-400" />
           <p className="max-w-[30ch]  line-clamp-1">{name}</p>
         </div>
