@@ -8,6 +8,9 @@ import { useAllPatientQuery } from "@/queries/patient/all-patients-query";
 import Link from "next/link";
 import { useAllRecordingsQuery } from "@/queries/recording/recordings-query";
 import Image from "next/image";
+import { useStore } from "@/store/store";
+import ClientOnly from "@/components/client-only";
+import { LoadingCard } from "@/components/loading-card";
 
 export default function Home() {
   const patientsQuery = useAllPatientQuery();
@@ -16,10 +19,14 @@ export default function Home() {
   const recordingsQuery = useAllRecordingsQuery();
   const recordings = recordingsQuery.data?.slice(0, 5);
 
+  const name = useStore((s) => s.user?.fullName);
+
   return (
     <>
       <div className="px-4 md:px-12 xl:px-20 space-y-2 md:space-y-4 text-neutral-600 pt-6">
-        <h1 className="text-blu text-2xl font-semibold">Hi, Naman</h1>
+        <h1 className="text-blu text-2xl font-semibold flex gap-1 h-8">
+          <ClientOnly>Hi, {name}</ClientOnly>
+        </h1>
 
         <div className="flex gap-2 items-center text-lg text-neutral-600 pt-4">
           {patient}
@@ -27,6 +34,8 @@ export default function Home() {
         </div>
 
         <div className="flex gap-2 overflow-x-scroll no-scrollbar">
+          {!patients &&
+            new Array(3).fill(0).map((_, i) => <LoadingCard key={i} />)}
           {patients?.map((patient, idx) => {
             return (
               <div className="min-w-[12rem]" key={patient.id}>
@@ -44,7 +53,9 @@ export default function Home() {
 
         <Link href="/patients">
           <Button className="rounded-full  px-10 w-full max-w-sm gap-1">
-            <span>View full list ({patientsQuery.data?.length ?? "..."})</span>
+            <span>
+              View full list {!!patients && `(${patientsQuery.data?.length})`}
+            </span>
             <ArrowRight className="" size={16} />
           </Button>
         </Link>
@@ -53,10 +64,15 @@ export default function Home() {
 
         <div className="flex gap-2 items-center text-lg text-neutral-600 pt-4">
           <Mic size={21} />
-          <p>Recordings ({recordingsQuery.data?.length ?? "..."})</p>
+          <p>
+            Recordings{" "}
+            {recordingsQuery.data && `(${recordingsQuery.data?.length})`}
+          </p>
         </div>
 
         <div className="flex gap-2 overflow-x-scroll no-scrollbar">
+          {!recordings &&
+            new Array(3).fill(0).map((_, i) => <LoadingCard key={i} />)}
           {recordings?.map((recording, idx) => {
             return (
               <Link
