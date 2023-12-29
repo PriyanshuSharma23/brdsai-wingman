@@ -22,7 +22,7 @@ export const NoteCard = ({ date, name, format, noteId }: NoteCardProps) => {
 
         <div className="pt-4"></div>
         <div className="px-4 text-sm py-2 border border-gray-300 bg-slate-200 text-blu max-w-max rounded-full">
-          {format}
+          {format || "Custom"}
         </div>
 
         <button className="text-gray-400 absolute right-2 top-6">

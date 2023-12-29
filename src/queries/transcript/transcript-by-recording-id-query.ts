@@ -2,6 +2,7 @@ import request from "@/lib/customAxios";
 import { useQuery } from "@tanstack/react-query";
 import { Transcript } from "@/types/Transcript";
 import { useEffect, useRef, useState } from "react";
+import { DEFAULT_RETRY_INTERVAL } from "@/lib/constants";
 
 type UseTranscriptByRecordingQueryProps = {
   recordingId: number;
@@ -9,8 +10,7 @@ type UseTranscriptByRecordingQueryProps = {
 export const useTranscriptByRecordingQuery = (
   props: UseTranscriptByRecordingQueryProps
 ) => {
-  const [refetchInterval, setRefetchInterval] = useState<number | false>(5000);
-  const callCount = useRef(0);
+  const [refetchInterval, setRefetchInterval] = useState<number | false>(DEFAULT_RETRY_INTERVAL);
 
   const transcriptQuery = useQuery({
     queryKey: ["transcript", "by-recording", props.recordingId],

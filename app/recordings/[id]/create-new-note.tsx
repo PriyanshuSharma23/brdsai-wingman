@@ -36,6 +36,7 @@ import { useCreateNoteMutation } from "@/queries/recording/create-note-mutation"
 import { toast } from "sonner";
 import { Checkbox } from "@/components/ui/checkbox";
 import { cn } from "@/lib/utils";
+import { useRouter } from "next/navigation";
 
 const createNoteSchema = z.object({
   noteFormat: z.string().optional(),
@@ -79,11 +80,13 @@ export function CreateNewNote({
   });
 
   const [usingCustom, setUsingCustom] = useState(false);
+  const router = useRouter();
 
   const createNoteMutation = useCreateNoteMutation();
   const onSubmit = (values: z.infer<typeof createNoteSchema>) => {
+    if (createNoteMutation.isPending) return;
     if (
-      !values.additionalPrompt?.trim() ||
+      !values.additionalPrompt?.trim() &&
       !(values.noteSetting && values.noteSetting)
     ) {
       toast.error(
@@ -100,9 +103,10 @@ export function CreateNewNote({
         customPrompt: values.additionalPrompt,
       },
       {
-        onSuccess: () => {
+        onSuccess: (data) => {
           toast.success("Note created successfully");
           closeWindow();
+          router.push(`/notes/${data.id}`);
         },
       },
     );
@@ -158,7 +162,9 @@ export function CreateNewNote({
               <Checkbox
                 id="use-custom"
                 checked={usingCustom}
-                onCheckedChange={(checked) => setUsingCustom(checked.valueOf() as boolean)}
+                onCheckedChange={(checked) =>
+                  setUsingCustom(checked.valueOf() as boolean)
+                }
               />
               <label
                 htmlFor="use-custom"
@@ -266,9 +272,7 @@ export function CreateNewNote({
               render={({ field }) => {
                 return (
                   <FormItem>
-                    <FormLabel>
-                      Preferred Length
-                    </FormLabel>
+                    <FormLabel>Preferred Length</FormLabel>
                     <FormControl>
                       <Select
                         onValueChange={field.onChange}
@@ -299,7 +303,11 @@ export function CreateNewNote({
             />
 
             <div className="pt-2"></div>
-            <Button type="submit" className="w-full rounded-full">
+            <Button
+              type="submit"
+              className="w-full rounded-full"
+              disabled={createNoteMutation.isPending}
+            >
               Create Note
             </Button>
           </form>

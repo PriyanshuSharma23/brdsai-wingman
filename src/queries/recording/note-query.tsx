@@ -1,3 +1,4 @@
+import { DEFAULT_RETRY_INTERVAL } from "@/lib/constants";
 import request from "@/lib/customAxios";
 import { isResponseOk } from "@/lib/utils";
 import { Note } from "@/types/Note";
@@ -8,7 +9,7 @@ type UseNoteQueryProps = {
   noteId: string;
 };
 export const useNoteQuery = ({ noteId }: UseNoteQueryProps) => {
-  const [refetchInterval, setRefetchInterval] = useState<number | false>(5000);
+  const [refetchInterval, setRefetchInterval] = useState<number | false>(DEFAULT_RETRY_INTERVAL);
 
   let noteQuery = useQuery({
     queryKey: ["note", noteId],
