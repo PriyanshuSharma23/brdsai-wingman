@@ -13,6 +13,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 export const signInFormSchema = z.object({
   email: z.string().email(),
@@ -74,16 +75,12 @@ export const SignInForm = ({ signInForm, onSubmit }: SignInFormProps) => {
               );
             }}
           />
-          <Button
-            variant={"link"}
+          <Link
+            href="/auth/forgot-password"
             className="p-0 text-blu"
-            onClick={(e) => {
-              e.preventDefault();
-              router.push("/auth/forgot-password");
-            }}
           >
             Forgot Password?
-          </Button>
+          </Link>
         </div>
 
         {signInForm.formState.errors.root &&
