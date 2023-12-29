@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import NextTopLoader from 'nextjs-toploader';
 import { Inter } from "next/font/google";
 import "./globals.css";
 import "./custom-progress-bar.css";
@@ -56,6 +57,7 @@ export default function RootLayout({
         <meta property="og:image" content="https://wingman.brdsai.com/logo-base.png" />
       </head>
       <body className={inter.className}>
+        <NextTopLoader color="#035879" showSpinner={false} />
         <Provider>
           {children}
         </Provider>
