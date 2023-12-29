@@ -39,6 +39,7 @@ import {
 import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@/components/ui/button";
+import { DNA } from "react-loader-spinner";
 
 const noteTypes = [
   "History & Physical",
@@ -122,9 +123,16 @@ export default function PatientsPage(params: RecordingPageParams) {
 
         <TabsContent value="note-editor" className="md:container py-8 px-4">
           {!noteQuery.data?.isProcessed && (
-            <div className="flex items-center justify-center">
-              <p className="text-blu">Processing...</p>
-            </div>
+              <div className="flex items-center gap-2 text-neutral-500 justify-center relative">
+                <div className="text-center pt-20 flex flex-col items-center">
+                  <DNA />
+                  {!!noteQuery.data ? (
+                    <p>Generating Note</p>
+                  ) : (
+                    <p>Checking status</p>
+                  )}
+                </div>
+              </div>
           )}
           {noteQuery.data?.blocks?.map((b, i) => (
             <>

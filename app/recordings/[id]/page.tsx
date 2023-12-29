@@ -27,6 +27,8 @@ import { useDeleteRecordingMutation } from "@/queries/recording/delete-recording
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { ArrowPatientCard } from "@/components/arrow-patient-card";
+import { LoadingCard } from "@/components/loading-card";
+import { DNA } from "react-loader-spinner";
 
 type RecordingPageParams = {
   params: {
@@ -89,16 +91,16 @@ export default function RecordingsPage(params: RecordingPageParams) {
 
       <Tabs defaultValue="overview">
         <div className="sticky top-[4.5rem] bg-white z-10">
-          <TabsList className="grid w-full grid-cols-2 bg-white ">
+          <TabsList className="grid w-full grid-cols-2 bg-white focus:outline-none active:outline-none focus:ring-none">
             <TabsTrigger
               value="overview"
-              className="rounded-none border-b data-[state=active]:text-blu data-[state=active]:border-b-blu/70 data-[state=active]:border-b-2 text-md font-normal bg-white"
+              className="rounded-none border-b data-[state=active]:text-blu data-[state=active]:border-b-blu/70 data-[state=active]:border-b-2 text-md font-normal bg-white focus:outline-none"
             >
               Overview
             </TabsTrigger>
             <TabsTrigger
               value="transcript"
-              className="rounded-none border-b data-[state=active]:text-blu data-[state=active]:border-b-blu/70 data-[state=active]:border-b-2 text-md font-normal bg-white"
+              className="rounded-none border-b data-[state=active]:text-blu data-[state=active]:border-b-blu/70 data-[state=active]:border-b-2 text-md font-normal bg-white focus:outline-none "
             >
               Transcript
             </TabsTrigger>
@@ -133,11 +135,18 @@ export default function RecordingsPage(params: RecordingPageParams) {
               <p>Associated Patient</p>
             </div>
             <div className="pt-2"></div>
-            <ArrowPatientCard
-              name={recordingQuery.data?.patient.name}
-              uniqueId={recordingQuery.data?.patient.uniqueId}
-              patientId={recordingQuery.data?.patient.id.toString()}
-            />
+            {recordingQuery.isLoading && (
+              <div className="max-w-md">
+                <LoadingCard />
+              </div>
+            )}
+            {!!recordingQuery.data && (
+              <ArrowPatientCard
+                name={recordingQuery.data?.patient.name}
+                uniqueId={recordingQuery.data?.patient.uniqueId}
+                patientId={recordingQuery.data?.patient.id.toString()}
+              />
+            )}
             <div className="pt-2"></div>
           </div>
 
@@ -163,69 +172,84 @@ export default function RecordingsPage(params: RecordingPageParams) {
                   </Button>
                 </CollapsibleTrigger>
               </div>
-              <CollapsibleContent className=" flex flex-col gap-4">
-                {notesQuery.data?.map((note) => (
-                  <NoteCard
-                    key={note.id}
-                    name={note.title ?? "Unnamed note"}
-                    // date in DD/MM/YYYY
-                    date={new Date(note.createdAt).toLocaleDateString("en-US")}
-                    format={note.noteFormat}
-                    noteId={note.id}
-                  />
-                ))}
+              <CollapsibleContent className=" flex flex-col gap-4 md:grid md:grid-cols-2 xl:grid-cols-3">
+                {!!notesQuery.data
+                  ? notesQuery.data?.map((note) => (
+                      <NoteCard
+                        key={note.id}
+                        name={note.title ?? "Unnamed note"}
+                        // date in DD/MM/YYYY
+                        date={new Date(note.createdAt).toLocaleDateString(
+                          "en-US",
+                        )}
+                        format={note.noteFormat}
+                        noteId={note.id}
+                      />
+                    ))
+                  : new Array(5).fill(0).map((_, i) => <LoadingCard key={i} />)}
               </CollapsibleContent>
             </Collapsible>
           </div>
           <div className="pt-48"></div>
         </TabsContent>
         <TabsContent value="transcript">
-          <div className="container space-y-2 md:space-y-4 sticky top-[7.1rem] bg-white text-neutral-600 pt-4">
+          <div className="px-4 space-y-2 md:space-y-4 sticky top-[7.1rem] bg-white text-neutral-600 pt-4">
             <SearchIconInput
               icon={<Search size={16} className="stroke-gray-400" />}
               placeholder="Search keywords"
+              className="bg-white"
             />
           </div>
 
-          <div className="container space-y-4 py-6 flex-1 text-neutral-500">
+          <div className="space-y-4 py-6 flex-1 text-neutral-500 px-4">
             {!transcriptQuery.data?.isProcessed && (
-              <div className="flex items-center gap-2 text-neutral-500 justify-center">
-                <p className="text-center">Transcript is being processed</p>
+              <div className="flex items-center gap-2 text-neutral-500 justify-center relative">
+                <div className="text-center pt-20 flex flex-col items-center">
+                  <DNA />
+                  {!!transcriptQuery.data ? (
+                    <p>Generating Transcript</p>
+                  ) : (
+                    <p>Checking status</p>
+                  )}
+                </div>
               </div>
             )}
             {transcriptQuery.data?.segments?.map((transcriptSegment) => (
-              <TranscriptSegment
-                timestamp={Number(transcriptSegment.start)}
-                transcript={transcriptSegment.text}
-                timeSegments={2}
-                key={transcriptSegment.start}
-                active={isActive(
-                  timeProgress,
-                  Number(transcriptSegment.start),
-                  Number(transcriptSegment.end)
-                )}
-                onClick={() => {
-                  console.log("seeking");
-                  seekAndPlay(Number(transcriptSegment.start));
-                }}
-              />
+              <>
+                <TranscriptSegment
+                  timestamp={Number(transcriptSegment.start)}
+                  transcript={transcriptSegment.text}
+                  timeSegments={2}
+                  key={transcriptSegment.start}
+                  active={isActive(
+                    timeProgress,
+                    Number(transcriptSegment.start),
+                    Number(transcriptSegment.end),
+                  )}
+                  onClick={() => {
+                    console.log("seeking");
+                    seekAndPlay(Number(transcriptSegment.start));
+                  }}
+                />
+              </>
             ))}
-          </div>
 
-          <div className="pt-96"></div>
+            <div className="pt-96"></div>
+          </div>
         </TabsContent>
       </Tabs>
 
       <div className="w-full bg-white py-6 fixed bottom-0 inset-x-0 border-t ">
-        <div className="pb-4 w-full bg-white border-b px-4 gap-2 grid place-content-stretch">
+        <div className="pb-4 w-full bg-white  px-4 gap-2 grid place-content-stretch container">
           <Button
-            className="w-full rounded-full max-w-lg mx-auto"
+            className="w-full rounded-full px-4  mx-auto"
             onClick={() => setCreateNewNoteOpen(true)}
           >
             New note from recording
             <Plus size={18} className="ml-2" />
           </Button>
         </div>
+        <div className="border-b"></div>
         <div className="px-4 pt-4">
           <AudioPlayer
             source={key ? createAudioSourceFromKey(key) : ""}
@@ -234,7 +258,8 @@ export default function RecordingsPage(params: RecordingPageParams) {
         </div>
       </div>
       <CreateNewNote
-        open={!!recordingQuery.data && createNewNoteOpen}
+        // open={!!recordingQuery.data && createNewNoteOpen}
+        open={createNewNoteOpen}
         onOpenChange={setCreateNewNoteOpen}
         closeWindow={() => setCreateNewNoteOpen(false)}
         recordingId={Number(params.params.id)}

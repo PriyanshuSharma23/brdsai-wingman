@@ -111,7 +111,7 @@ export default function Home() {
         alt="onboarding figure 1"
         width={290}
         height={343}
-        className={`w-3/4 bottom-0 left-0   fixed -z-50 max-w-md `}
+        className={`w-3/4 bottom-0 left-0   fixed -z-50 max-w-md opacity-50`}
         priority
       />
     </>

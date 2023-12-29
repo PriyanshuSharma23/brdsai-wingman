@@ -5,9 +5,9 @@ import { Note } from "@/types/Note";
 
 type MutationParams = {
   recordingId: number;
-  noteFormat: string;
-  preferredLength: string;
-  noteSetting: string;
+  noteFormat?: string;
+  preferredLength?: string;
+  noteSetting?: string;
   customPrompt?: string;
 };
 
