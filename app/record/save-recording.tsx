@@ -61,44 +61,34 @@ export const SaveRecording = (props: SaveRecordingProps) => {
     if (!props.recordingBlob) {
       return;
     }
-    // let extension = mime.extension(props.recordingBlob.type);
-    //
-    // if (!extension) {
-    //   toast.error("Unsupported audio type");
-    //   return;
-    // }
-    //
-    // console.log({ extension })
-  
+
     let mime = props.recordingBlob.type
     let extension: string;
     console.log({ mime })
 
     if (mime.includes("webm")) {
       extension = ".webm";
-    } else if (mime.includes("m4a")){
+    } else if (mime.includes("mp4")){
       extension = ".m4a";
     } else {
-      extension = "unknown";
+      toast.error("Unsupported audio type");
+      return;
     }
 
-    alert(`${mime} ${extension}`);
-
-    return;
-    // createRecordingMutation.mutate(
-    //   {
-    //     patientId: Number(values.patient),
-    //     recordingFile: props.recordingBlob,
-    //     duration: props.duration * 1000,
-    //     recordingName: values.recordingName,
-    //     extension: `.${extension}`
-    //   },
-    //   {
-    //     onSuccess: (data) => {
-    //       router.replace("/recordings/" + data.id);
-    //     },
-    //   }
-    // );
+    createRecordingMutation.mutate(
+      {
+        patientId: Number(values.patient),
+        recordingFile: props.recordingBlob,
+        duration: props.duration * 1000,
+        recordingName: values.recordingName,
+        extension: `${extension}`
+      },
+      {
+        onSuccess: (data) => {
+          router.replace("/recordings/" + data.id);
+        },
+      }
+    );
   };
 
   const loadWithDuration = useAudioPlayer((s) => s.loadWithDuration);
@@ -132,7 +122,7 @@ export const SaveRecording = (props: SaveRecordingProps) => {
               <Form {...form}>
                 <form
                   onSubmit={form.handleSubmit(onSubmit)}
-                  className="space-y-4 max-w-sm flex flex-col flex-1 "
+                  className="space-y-4  flex flex-col flex-1 "
                 >
                   <FormField
                     control={form.control}
