@@ -22,7 +22,17 @@ export const useNotesByPatient = ({ patientId }: UseNotesByPatientProps) => {
         throw new Error("Error fetching notes of patient");
       }
 
-      return resp.data as Note[];
+
+      let data: Note[] = resp.data;
+
+      let sorted = data.sort((a, b) => {
+        let aDate = new Date(a.createdAt);
+        let bDate = new Date(b.createdAt);
+
+        return bDate.getTime() - aDate.getTime();
+      });
+
+      return sorted as Note[];
     },
     refetchOnWindowFocus: false,
   });

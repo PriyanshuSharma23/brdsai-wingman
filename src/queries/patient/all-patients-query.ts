@@ -15,7 +15,16 @@ export const useAllPatientQuery = () => {
         throw new Error("Error fetching patients");
       }
 
-      return resp.data as Patient[]
+      let data: Patient[] = resp.data;
+
+      let sorted = data.sort((a, b) => {
+        let aDate = new Date(a.createdAt);
+        let bDate = new Date(b.createdAt);
+
+        return bDate.getTime() - aDate.getTime();
+      });
+
+      return sorted as Patient[];
     },
     refetchOnWindowFocus: false,
   });

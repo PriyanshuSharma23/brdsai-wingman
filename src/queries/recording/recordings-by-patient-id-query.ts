@@ -23,7 +23,16 @@ export const useRecordingsByPatient = ({
         throw new Error("Error fetching recordings of patient");
       }
 
-      return resp.data.map((rec: any) => {
+      let data: Recording[] = resp.data;
+
+      let sorted = data.sort((a, b) => {
+        let aDate = new Date(a.createdAt);
+        let bDate = new Date(b.createdAt);
+
+        return bDate.getTime() - aDate.getTime();
+      });
+
+      return sorted.map((rec: any) => {
         return {
           ...rec,
           duration: rec.duration / 1000,
