@@ -8,7 +8,7 @@ import Provider from "@/components/provider";
 
 const poppins = Poppins({
   weight: ["100", "200", "300", "500", "600", "700", "800", "900"],
-  subsets: ["latin"]
+  subsets: ["latin"],
 });
 
 export const metadata: Metadata = {
@@ -92,7 +92,7 @@ export default function RootLayout({
         />
         <meta
           name="viewport"
-          content="minimum-scale=1, initial-scale=1, width=device-width, shrink-to-fit=no, user-scalable=no, viewport-fit=cover"
+          content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"
         />
       </head>
       <body className={poppins.className}>
