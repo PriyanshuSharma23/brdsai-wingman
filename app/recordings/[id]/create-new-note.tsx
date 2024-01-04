@@ -142,7 +142,7 @@ export function CreateNewNote({
               render={({ field }) => {
                 return (
                   <FormItem>
-                    <FormLabel className={cn(usingCustom && "text-gray-400")}>
+                    <FormLabel>
                       Add your prompt here
                     </FormLabel>
                     <FormControl>
@@ -150,7 +150,6 @@ export function CreateNewNote({
                         placeholder="Example: Create a consult note for this patient and summarize the medical history"
                         rows={10}
                         {...field}
-                        disabled={usingCustom}
                       />
                     </FormControl>
                     <FormMessage />
@@ -170,7 +169,7 @@ export function CreateNewNote({
                 htmlFor="use-custom"
                 className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
               >
-                Or choose pre-built defaults
+                Choose pre-built defaults
               </label>
             </div>
             {true && (
