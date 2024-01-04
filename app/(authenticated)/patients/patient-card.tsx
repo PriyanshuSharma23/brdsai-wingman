@@ -15,6 +15,7 @@ export const PatientCard = (props: PatientCardProps) => {
         content={props.mrn ?? 
           <span className="italic">No MRN provided</span>
         }
+        className="space-y-3"
         titleIcon={
           <svg
             viewBox="0 0 18 18"
