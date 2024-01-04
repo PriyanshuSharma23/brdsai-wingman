@@ -1,7 +1,13 @@
 "use client";
 import { Button } from "@/components/ui/button";
 import { PatientCard } from "./patients/patient-card";
-import { ArrowRight, Mic, PlusIcon } from "lucide-react";
+import {
+  ArrowRight,
+  ChevronRight,
+  ChevronRightCircle,
+  Mic,
+  PlusIcon,
+} from "lucide-react";
 import { ChipCard } from "@/components/chip-card";
 import { Note } from "@/components/svgs/note";
 import { useAllPatientQuery } from "@/queries/patient/all-patients-query";
@@ -27,16 +33,26 @@ export default function Home() {
         <h1 className="text-blu text-2xl font-semibold flex gap-1 h-8">
           <ClientOnly>Hi, {name}</ClientOnly>
         </h1>
-
         <div className="flex gap-2 items-center text-lg text-neutral-600 pt-4">
           {patient}
           <p>Recent Patients</p>
+          <div className="ml-auto">
+            <Link
+              href="/patients"
+              className="text-blu text-sm flex items-center gap-1 font-[500]"
+            >
+              View More
+              <ChevronRight size={16} />
+            </Link>
+          </div>
         </div>
-
         <div className="flex gap-2 overflow-x-scroll no-scrollbar">
           {!patients &&
             new Array(3).fill(0).map((_, i) => <LoadingCard key={i} />)}
-          {patients?.map((patient, idx) => {
+          {patients && patients.length === 0 && (
+            <p className="italic text-gray-400 ">No patients</p>
+          )}
+          {patients?.map((patient) => {
             return (
               <div className="min-w-[12rem]" key={patient.id}>
                 <PatientCard
@@ -48,31 +64,28 @@ export default function Home() {
             );
           })}
         </div>
-
-        <div className=""></div>
-
-        <Link href="/patients">
-          <Button className="rounded-full  px-10 w-full max-w-sm gap-1">
-            <span>
-              View full list {!!patients && `(${patientsQuery.data?.length})`}
-            </span>
-            <ArrowRight className="" size={16} />
-          </Button>
-        </Link>
-
         <div className="py-3 border-b border-gray-400/50"></div>
-
         <div className="flex gap-2 items-center text-lg text-neutral-600 pt-4">
           <Mic size={21} />
-          <p>
-            Recordings{" "}
-            {recordingsQuery.data && `(${recordingsQuery.data?.length})`}
-          </p>
-        </div>
+          <p>Recordings</p>
 
+          <div className="ml-auto">
+            <Link
+              href="/recordings"
+              className="text-blu text-sm flex items-center gap-1 font-[500]"
+            >
+              View More
+              <ChevronRight size={16} />
+            </Link>
+          </div>
+        </div>
         <div className="flex gap-2 overflow-x-scroll no-scrollbar">
           {!recordings &&
             new Array(3).fill(0).map((_, i) => <LoadingCard key={i} />)}
+
+          {recordings && recordings.length === 0 && (
+            <p className="italic text-gray-400 ">No recordings</p>
+          )}
           {recordings?.map((recording, idx) => {
             return (
               <Link
@@ -92,7 +105,6 @@ export default function Home() {
           })}
         </div>
         <div className=""></div>
-
         <Link href={"/record"}>
           <Button className="rounded-full  px-10 w-full max-w-sm gap-1">
             <span>New Recording</span>
@@ -104,7 +116,7 @@ export default function Home() {
 
         <div className="flex gap-2 items-center text-lg text-neutral-600 pt-4">
           <Note className="w-6" />
-          <p>Notes (42)</p>
+          <p>Notes</p>
         </div>
         <div className="flex gap-2 overflow-x-scroll no-scrollbar">
           {new Array(10).fill(0).map((_, idx) => {
@@ -150,3 +162,26 @@ const patient = (
     />
   </svg>
 );
+
+// <div className="flex gap-2 items-center text-lg text-neutral-600 pt-4">
+//   <Note className="w-6" />
+//   <p>Notes </p>
+// </div>
+// <div className="flex gap-2 overflow-x-scroll no-scrollbar">
+//   {new Array(10).fill(0).map((_, idx) => {
+//     return (
+//       <div className="min-w-[12rem]" key={idx}>
+//         <ChipCard
+//           titleIcon={<Note className={"w-5"} />}
+//           title="Note Name"
+//           contentIcon={<Mic size={16} />}
+//           content="Recording Name"
+//           key={idx}
+//         />
+//       </div>
+//     );
+//   })}
+// </div>
+//
+// <div className="px-4 md:px-12 xl:px-20 space-y-2 md:space-y-4 text-neutral-600 pt-6 bg-white rounded-2xl border-t border-x -translate-y-8">
+//
