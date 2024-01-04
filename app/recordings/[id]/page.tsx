@@ -173,12 +173,16 @@ export default function RecordingsPage(params: RecordingPageParams) {
                 </CollapsibleTrigger>
               </div>
               <CollapsibleContent className=" flex flex-col gap-4 md:grid md:grid-cols-2 xl:grid-cols-3">
+                {
+                  !!notesQuery.data && notesQuery.data.length === 0 && <p className="italic text-gray-400 ">
+                    No notes associated with this recording
+                  </p>
+                }
                 {!!notesQuery.data
                   ? notesQuery.data?.map((note) => (
                       <NoteCard
                         key={note.id}
                         name={note.title ?? "Unnamed note"}
-                        // date in DD/MM/YYYY
                         date={new Date(note.createdAt).toLocaleDateString(
                           "en-US",
                         )}

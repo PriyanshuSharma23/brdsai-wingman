@@ -93,6 +93,11 @@ const PatientPage = ({ params }: PatientPageProps) => {
                   return <LoadingCard key={i} />;
                 })}
 
+              {
+                !!recordingsQuery.data && recordingsQuery.data.length === 0 && 
+                  <p>No recordings</p>
+              }
+
               {!!recordingsQuery.data &&
                 recordingsQuery.data.map((recording) => {
                   return (
