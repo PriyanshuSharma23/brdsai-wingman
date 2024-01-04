@@ -7,7 +7,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { DummyBlock, TagNames } from "./dummy-block";
 import { ArrowPatientCard } from "@/components/arrow-patient-card";
 import { usePatientQuery } from "@/queries/patient/patient-query";
-import { Mic } from "lucide-react";
+import { Cog, Mic } from "lucide-react";
 import { AudioCard } from "@/components/audio-card";
 import { useRecordingQuery } from "@/queries/recording/recording-query";
 import { createAudioSourceFromKey, parseTimestamp } from "@/lib/utils";
@@ -95,12 +95,8 @@ export default function PatientsPage(params: RecordingPageParams) {
         resourceName="note"
         fallbackBackRoute="/note"
         name={noteQuery.data?.title ?? "Unnamed Note"}
-        onEdit={function (newName: string): void {
-          throw new Error("Function not implemented.");
-        }}
-        onDelete={function (): void {
-          throw new Error("Function not implemented.");
-        }}
+        onEdit={function (newName: string): void {}}
+        onDelete={function (): void {}}
       />
 
       <Tabs defaultValue="note-editor">
@@ -123,16 +119,16 @@ export default function PatientsPage(params: RecordingPageParams) {
 
         <TabsContent value="note-editor" className="md:container py-8 px-4">
           {!noteQuery.data?.isProcessed && (
-              <div className="flex items-center gap-2 text-neutral-500 justify-center relative">
-                <div className="text-center pt-20 flex flex-col items-center">
-                  <DNA />
-                  {!!noteQuery.data ? (
-                    <p>Generating Note</p>
-                  ) : (
-                    <p>Checking status</p>
-                  )}
-                </div>
+            <div className="flex items-center gap-2 text-neutral-500 justify-center relative">
+              <div className="text-center pt-20 flex flex-col items-center">
+                <DNA />
+                {!!noteQuery.data ? (
+                  <p>Generating Note</p>
+                ) : (
+                  <p>Checking status</p>
+                )}
               </div>
+            </div>
           )}
           {noteQuery.data?.blocks?.map((b, i) => (
             <>
@@ -155,47 +151,54 @@ export default function PatientsPage(params: RecordingPageParams) {
           <form onSubmit={form.handleSubmit(onSubmit)}>
             <TabsContent value="note-info" className="px-4 ">
               <div className="md:container py-8 space-y-3">
-                <FormField
-                  control={form.control}
-                  name="noteFormat"
-                  render={({ field }) => {
-                    return (
-                      <FormItem>
-                        <FormLabel>
-                          Note Format<span className="text-red-400">*</span>
-                        </FormLabel>
-                        <FormControl>
-                          <Select
-                            onValueChange={field.onChange}
-                            value={field.value}
-                            name={field.name}
-                          >
-                            <SelectTrigger className="">
-                              <SelectValue placeholder="Select a patient" />
-                            </SelectTrigger>
-                            <SelectContent
-                              onBlur={field.onBlur}
-                              ref={field.ref}
-                            >
-                              <SelectGroup>
-                                <SelectLabel>Note Formats</SelectLabel>
-                                {noteTypes.map((type) => (
-                                  <SelectItem
-                                    value={type.toString()}
-                                    key={type}
-                                  >
-                                    {type}
-                                  </SelectItem>
-                                ))}
-                              </SelectGroup>
-                            </SelectContent>
-                          </Select>
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    );
-                  }}
-                />
+                <div className="flex gap-2 items-center text-md text-neutral-600 ">
+                  <Cog size={20} />
+                  <h2 className="text-lg">Note Configuration</h2>
+                </div>
+                <div className={"grid grid-cols-1 gap-2 lg:grid-cols-4"}>
+                  {!noteQuery.data &&
+                    new Array(4)
+                      .fill(0)
+                      .map((_, idx) => <LoadingNoteConfigCard key={idx} />)}
+                  {!!noteQuery.data && (
+                    <>
+                      <NoteConfigCard
+                        title="Preferred Length"
+                        content={noteQuery.data.preferredLength}
+                      />
+                      {!!noteQuery.data.noteFormat && (
+                        <NoteConfigCard
+                          title="Note Format"
+                          content={noteQuery.data.noteFormat}
+                        />
+                      )}
+                      {!!noteQuery.data.noteSetting && (
+                        <NoteConfigCard
+                          title="Note Setting"
+                          content={capitalizeFirstLetter(
+                            noteQuery.data.noteSetting,
+                          )}
+                        />
+                      )}
+
+                      <NoteConfigCard
+                        title="Created At"
+                        content={new Date(
+                          noteQuery.data.createdAt,
+                        ).toDateString()}
+                      />
+
+                      {!!noteQuery.data?.customPrompt && (
+                        <div className="col-span-full">
+                          <NoteConfigCard
+                            title="Custom Prompt"
+                            content={noteQuery.data?.customPrompt}
+                          />
+                        </div>
+                      )}
+                    </>
+                  )}
+                </div>
               </div>
               <hr />
               <div className="md:container py-8 space-y-3">
@@ -258,12 +261,6 @@ export default function PatientsPage(params: RecordingPageParams) {
                   />
                 )}
               </div>
-              <hr />
-
-              {/* create another div section with a button labelled update */}
-              <div className="flex gap-2 items-center text-md text-neutral-600 pt-8">
-                <Button className="rounded-full w-full">Update</Button>
-              </div>
             </TabsContent>
           </form>
         </Form>
@@ -290,4 +287,34 @@ export default function PatientsPage(params: RecordingPageParams) {
       </div>
     </main>
   );
+}
+
+type NoteConfigCardProps = {
+  title: string;
+  content: string;
+};
+const NoteConfigCard = (props: NoteConfigCardProps) => {
+  return (
+    <div className={`rounded-lg  p-2 space-y-1`}>
+      <p className="text-sm text-slate-600">{props.title}</p>
+      {props.content.length === 0 ? (
+        <p className="italic text-gray-400 text-sm">Not provided</p>
+      ) : (
+        <p className="">{props.content}</p>
+      )}
+    </div>
+  );
+};
+
+const LoadingNoteConfigCard = () => {
+  return (
+    <div className="bg-slate-100 rounded-lg  p-2 space-y-1 animate-pulse">
+      <p className="text-sm text-transparent">.</p>
+      <p className="italic text-transparent ">.</p>
+    </div>
+  );
+};
+
+function capitalizeFirstLetter(string) {
+  return string.charAt(0).toUpperCase() + string.slice(1);
 }
