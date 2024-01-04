@@ -10,7 +10,7 @@ export const Navbar = () => {
         alt="brds"
         width={273}
         height={78}
-        className="w-36"
+        className="w-36 object-contain"
         priority
       />
 
