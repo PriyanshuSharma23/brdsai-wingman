@@ -1,12 +1,15 @@
 import type { Metadata } from "next";
 import NextTopLoader from "nextjs-toploader";
-import { Inter } from "next/font/google";
+import { Poppins } from "next/font/google";
 import "./globals.css";
 import "./custom-progress-bar.css";
 import { Toaster } from "sonner";
 import Provider from "@/components/provider";
 
-const inter = Inter({ subsets: ["latin"] });
+const poppins = Poppins({
+  weight: ["100", "200", "300", "500", "600", "700", "800", "900"],
+  subsets: ["latin"]
+});
 
 export const metadata: Metadata = {
   title: "Brdsai Wingman",
@@ -92,7 +95,7 @@ export default function RootLayout({
           content="minimum-scale=1, initial-scale=1, width=device-width, shrink-to-fit=no, user-scalable=no, viewport-fit=cover"
         />
       </head>
-      <body className={inter.className}>
+      <body className={poppins.className}>
         <NextTopLoader color="#035879" showSpinner={false} />
         <Provider>{children}</Provider>
       </body>
