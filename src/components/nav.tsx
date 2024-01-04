@@ -1,12 +1,8 @@
-"use client";
 import Image from "next/image";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { NavWrapper } from "./nav-parent";
-import { useStore } from "@/store/store";
-import ClientOnly from "./client-only";
+import { UserMenu } from "./user-menu";
 
 export const Navbar = () => {
-  const { user } = useStore();
   return (
     <NavWrapper>
       <Image
@@ -17,24 +13,8 @@ export const Navbar = () => {
         className="w-36"
         priority
       />
-      <ClientOnly>
-        <Avatar>
-          {!!user ? (
-            <AvatarFallback
-              className="rounded-full bg-gray-100 border"
-              key={"loaded"}
-            >
-              {user.fullName?.[0]}
-            </AvatarFallback>
-          ) : (
-            <AvatarFallback
-              className="rounded-full bg-gray-100 border w-12 h-12"
-              key={"loading"}
-            ></AvatarFallback>
-          )}
-        </Avatar>
-      </ClientOnly>
+
+      <UserMenu />
     </NavWrapper>
   );
 };
-// <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />

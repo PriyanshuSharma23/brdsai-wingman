@@ -20,7 +20,7 @@ function Providers({ children }: React.PropsWithChildren) {
 export default Providers;
 
 const AuthWrapper = ({ children }: { children: ReactNode }) => {
-  const { isLoggedIn } = useStore();
+  const { isLoggedIn, user } = useStore();
   const router = useRouter();
   const pathname = usePathname();
   const isAuthRoute = pathname.includes("/auth");
@@ -29,7 +29,7 @@ const AuthWrapper = ({ children }: { children: ReactNode }) => {
     if (!isLoggedIn() && !isAuthRoute) {
       router.replace("/auth");
     }
-  }, [isLoggedIn, router]);
+  }, [isLoggedIn, router, user]);
 
   return children;
 };
