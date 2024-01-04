@@ -1,4 +1,3 @@
-"use client";
 import { User } from "@/types/User";
 import auth from "@/lib/auth";
 import { persist } from "zustand/middleware";
