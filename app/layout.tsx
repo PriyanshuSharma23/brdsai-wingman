@@ -55,6 +55,7 @@ export default function RootLayout({
         <meta property="og:site_name" content="Brdsai Wingman" />
         <meta property="og:url" content="https://wingman.brdsai.com" />
         <meta property="og:image" content="https://wingman.brdsai.com/logo-base.png" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
       </head>
       <body className={inter.className}>
         <NextTopLoader color="#035879" showSpinner={false} />
