@@ -37,7 +37,7 @@ const PATHS = {
         viewBox="0 0 39 25"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
-        className="w-9 mb-1"
+        className="w-[2.125rem] mb-1"
         stroke="currentColor"
       >
         <path
@@ -92,18 +92,17 @@ export const BottomBar = () => {
           }}
         >
           {Object.entries(PATHS).map(([key, path]) => (
-            <Button
-              variant={"ghost"}
+            <button
               key={path.name}
               className={cn(
-                "flex-col py-2 h-auto ",
+                "py-2  flex flex-col items-center",
                 pathname == key ? "text-blu hover:text-blu" : "text-gray-400"
               )}
               onClick={() => router.push(key)}
             >
               {path.icon}
               {path.name}
-            </Button>
+            </button>
           ))}
         </div>
       </div>
