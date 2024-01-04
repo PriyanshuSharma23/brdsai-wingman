@@ -131,9 +131,9 @@ const Auth = () => {
       <Image
         src={"/Logo.png"}
         alt={"brds"}
-        width={273}
-        height={78}
-        className="pt-20"
+        width={(273 / 78)*60}
+        height={60}
+        className="pt-20 w-48"
       />
       <Switch loginState={loginState} setLoginState={setLoginState} />
 
