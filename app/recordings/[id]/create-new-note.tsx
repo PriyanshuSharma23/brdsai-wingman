@@ -116,25 +116,23 @@ export function CreateNewNote({
   const closeModal = () => setModalOpen(false);
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
-      <SheetContent className="min-w-[100%]">
-        <div className="absolute top-0 inset-x-0">
-          <NavWrapper>
-            <div className="flex items-center text-primary gap-4">
-              <button className="translate-y-[2px]" onClick={closeWindow}>
-                <ArrowLeft size={20} className="text-gray-500" />
-              </button>
-              <p className="overflow-hidden text-ellipsis line-clamp-1 max-w-max translate-y-[2px] text-neutral-600">
-                Create note from{" "}
-                <span className="text-blu">{recordingName}</span>
-              </p>
-            </div>
-          </NavWrapper>
-        </div>
-        <div className="pt-16"></div>
+      <SheetContent className="min-w-[100%] p-0 overflow-y-scroll">
+        <NavWrapper>
+          <div className="flex items-center text-primary gap-4">
+            <button className="translate-y-[2px]" onClick={closeWindow}>
+              <ArrowLeft size={20} className="text-gray-500" />
+            </button>
+            <p className="overflow-hidden text-ellipsis line-clamp-1 max-w-max translate-y-[2px] text-neutral-600">
+              Create note from{" "}
+              <span className="text-blu">{recordingName}</span>
+            </p>
+          </div>
+        </NavWrapper>
+        <div className="pt-8"></div>
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(onSubmit)}
-            className="space-y-4 max-w-2xl mx-auto flex flex-col flex-1 "
+            className="space-y-4 max-w-2xl mx-auto flex flex-col flex-1 px-4"
           >
             <FormField
               control={form.control}
