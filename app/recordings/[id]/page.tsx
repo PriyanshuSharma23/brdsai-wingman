@@ -197,7 +197,7 @@ export default function RecordingsPage(params: RecordingPageParams) {
           <div className="pt-48"></div>
         </TabsContent>
         <TabsContent value="transcript">
-          <div className="px-4 space-y-2 md:space-y-4 sticky top-[7.1rem] bg-white text-neutral-600 pt-4">
+          <div className="px-4 space-y-2 md:space-y-4 sticky top-[7.2rem] bg-white text-neutral-600 py-4 md:px-16 -mt-2 -translate-y-[2px]">
             <SearchIconInput
               icon={<Search size={16} className="stroke-gray-400" />}
               placeholder="Search keywords"
@@ -205,7 +205,7 @@ export default function RecordingsPage(params: RecordingPageParams) {
             />
           </div>
 
-          <div className="space-y-4 py-6 flex-1 text-neutral-500 px-4">
+          <div className="space-y-4 pt-2 pb-6 flex-1 text-neutral-500 px-4 md:px-16">
             {!transcriptQuery.data?.isProcessed && (
               <div className="flex items-center gap-2 text-neutral-500 justify-center relative">
                 <div className="text-center pt-20 flex flex-col items-center">

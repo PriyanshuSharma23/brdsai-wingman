@@ -35,7 +35,7 @@ export const ActionsNav = (props: RecordingNavProps) => {
           <button className="translate-y-[2px]" onClick={back}>
             <ArrowLeft size={20} className="text-gray-500" />
           </button>
-          <p className="w-[20ch] overflow-hidden text-ellipsis line-clamp-1 max-w-max">
+          <p className="w-[20ch] md:w-max overflow-hidden text-ellipsis line-clamp-1 max-w-max">
             {props.name}
           </p>
           <button
