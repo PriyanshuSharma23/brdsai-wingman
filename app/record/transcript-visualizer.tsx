@@ -42,6 +42,7 @@ export const TranscriptVisualizer = (props: TranscriptVisualizerProps) => {
   useEffect(() => {
     return () => {
       setLastTranscript("");
+      resetTranscript();
     }
   }, []);
 
