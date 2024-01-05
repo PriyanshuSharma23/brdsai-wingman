@@ -40,3 +40,31 @@ export function isResponseOk(status: number): boolean {
 
 export const createAudioSourceFromKey = (key: string) =>
   `https://cdn.brdsai.com/${key}`;
+
+export function getTimeSinceUpdate(updatedAt: string) {
+  const updatedUTC = new Date(updatedAt);
+  const updated = new Date(
+    updatedUTC.getTime() - updatedUTC.getTimezoneOffset() * 60000
+  );
+  const now = new Date();
+  const timeDiff = now.getTime() - updated.getTime();
+
+  const seconds = Math.floor(timeDiff / 1000);
+  const minutes = Math.floor(seconds / 60);
+  const hours = Math.floor(minutes / 60);
+  const days = Math.floor(hours / 24);
+
+  if (days > 0) {
+    return `${days} ${days === 1 ? "day" : "days"} ago`;
+  } else if (hours > 0) {
+    return `${hours} ${hours === 1 ? "hour" : "hours"} ago`;
+  } else if (minutes > 0) {
+    return `${minutes} ${
+      minutes === 1 ? "minute" : "minutes"
+    } ago`;
+  } else {
+    return `Last updated ${seconds} ${
+      seconds === 1 ? "second" : "seconds"
+    } ago`;
+  }
+}
