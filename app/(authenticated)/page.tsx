@@ -2,9 +2,8 @@
 import { Button } from "@/components/ui/button";
 import { PatientCard } from "./patients/patient-card";
 import {
-  ArrowRight,
   ChevronRight,
-  ChevronRightCircle,
+  Clock,
   Mic,
   PlusIcon,
 } from "lucide-react";
@@ -17,6 +16,8 @@ import Image from "next/image";
 import { useStore } from "@/store/store";
 import ClientOnly from "@/components/client-only";
 import { LoadingCard } from "@/components/loading-card";
+import { useNotesByUser } from "@/queries/recording/notes-by-user";
+import { getTimeSinceUpdate } from "@/lib/utils";
 
 export default function Home() {
   const patientsQuery = useAllPatientQuery();
@@ -24,6 +25,9 @@ export default function Home() {
 
   const recordingsQuery = useAllRecordingsQuery();
   const recordings = recordingsQuery.data?.slice(0, 5);
+
+  const notesQuery = useNotesByUser();
+  const notes = notesQuery.data?.slice(0, 5);
 
   const name = useStore((s) => s.user?.fullName);
 
@@ -94,6 +98,7 @@ export default function Home() {
               >
                 <div className="min-w-[12rem]" key={idx}>
                   <ChipCard
+                    className="space-y-3"
                     titleIcon={<Mic size={15} />}
                     title={recording.recording.recordingName}
                     contentIcon={patient}
@@ -119,17 +124,25 @@ export default function Home() {
           <p>Notes</p>
         </div>
         <div className="flex gap-2 overflow-x-scroll no-scrollbar">
-          {new Array(10).fill(0).map((_, idx) => {
+          {!notes &&
+            new Array(3).fill(0).map((_, i) => <LoadingCard key={i} />)}
+
+          {notes && notes.length === 0 && (
+            <p className="italic text-gray-400 ">No Notes</p>
+          )}
+          {notes?.map((note, idx) => {
             return (
-              <div className="min-w-[12rem]" key={idx}>
-                <ChipCard
-                  titleIcon={<Note className={"w-5"} />}
-                  title="Note Name"
-                  contentIcon={<Mic size={16} />}
-                  content="Recording Name"
-                  key={idx}
-                />
-              </div>
+              <Link href={`/notes/${note.id}`} key={note.id}>
+                <div className="min-w-[12rem]" key={idx}>
+                  <ChipCard
+                    titleIcon={<Note className={"w-5"} />}
+                    title={note.title}
+                    contentIcon={<Clock size={14} className="text-gray-400"/>}
+                    content={getTimeSinceUpdate(note.createdAt)}
+                    className="space-y-3"
+                  />
+                </div>
+              </Link>
             );
           })}
         </div>
