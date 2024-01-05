@@ -10,7 +10,7 @@ import { usePatientQuery } from "@/queries/patient/patient-query";
 import { Cog, Mic } from "lucide-react";
 import { AudioCard } from "@/components/audio-card";
 import { useRecordingQuery } from "@/queries/recording/recording-query";
-import { createAudioSourceFromKey, parseTimestamp } from "@/lib/utils";
+import { cn, createAudioSourceFromKey, parseTimestamp } from "@/lib/utils";
 import { LoadingCard } from "@/components/loading-card";
 import AudioPlayer from "@/components/audio/AudioPlayer";
 import { AUDIO_PLAYER_HEIGHT } from "@/lib/constants";
@@ -54,10 +54,6 @@ type RecordingPageParams = {
   };
 };
 
-const updatePatientSchema = z.object({
-  noteFormat: z.string(),
-});
-
 export default function PatientsPage(params: RecordingPageParams) {
   const noteQuery = useNoteQuery({
     noteId: params.params.id,
@@ -73,21 +69,6 @@ export default function PatientsPage(params: RecordingPageParams) {
     setAudios3Key: setAudioSource,
     audioS3Key: audioSource,
   } = useAudioPlayerState();
-
-  const form = useForm<z.infer<typeof updatePatientSchema>>({
-    resolver: zodResolver(updatePatientSchema),
-    defaultValues: {
-      noteFormat: noteQuery.data?.noteFormat ?? "",
-    },
-  });
-
-  useEffect(() => {
-    form.setValue("noteFormat", noteQuery.data?.noteFormat ?? "");
-  }, [noteQuery.data]);
-
-  const onSubmit = (values: z.infer<typeof updatePatientSchema>) => {
-    console.log(values);
-  };
 
   return (
     <main className="flex flex-col">
@@ -132,9 +113,7 @@ export default function PatientsPage(params: RecordingPageParams) {
           )}
           {noteQuery.data?.blocks?.map((b, i) => (
             <>
-              {i !== 0 && b.tagName === "h2" && (
-                <hr className="border-gray-200 my-4" />
-              )}
+              {i !== 0 && b.tagName === "h2" && <div className=" my-4" />}
               <DummyBlock
                 key={i}
                 block={{
@@ -147,123 +126,115 @@ export default function PatientsPage(params: RecordingPageParams) {
 
           <div className="pt-20"></div>
         </TabsContent>
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)}>
-            <TabsContent value="note-info" className="px-4 ">
-              <div className="md:container py-8 space-y-3">
-                <div className="flex gap-2 items-center text-md text-neutral-600 ">
-                  <Cog size={20} />
-                  <h2 className="text-lg">Note Configuration</h2>
-                </div>
-                <div className={"grid grid-cols-1 gap-2 lg:grid-cols-4"}>
-                  {!noteQuery.data &&
-                    new Array(4)
-                      .fill(0)
-                      .map((_, idx) => <LoadingNoteConfigCard key={idx} />)}
-                  {!!noteQuery.data && (
-                    <>
-                      <NoteConfigCard
-                        title="Preferred Length"
-                        content={noteQuery.data.preferredLength}
-                      />
-                      {!!noteQuery.data.noteFormat && (
-                        <NoteConfigCard
-                          title="Note Format"
-                          content={noteQuery.data.noteFormat}
-                        />
-                      )}
-                      {!!noteQuery.data.noteSetting && (
-                        <NoteConfigCard
-                          title="Note Setting"
-                          content={capitalizeFirstLetter(
-                            noteQuery.data.noteSetting,
-                          )}
-                        />
-                      )}
-
-                      <NoteConfigCard
-                        title="Created At"
-                        content={new Date(
-                          noteQuery.data.createdAt,
-                        ).toDateString()}
-                      />
-
-                      {!!noteQuery.data?.customPrompt && (
-                        <div className="col-span-full">
-                          <NoteConfigCard
-                            title="Custom Prompt"
-                            content={noteQuery.data?.customPrompt}
-                          />
-                        </div>
-                      )}
-                    </>
-                  )}
-                </div>
-              </div>
-              <hr />
-              <div className="md:container py-8 space-y-3">
-                <div className="flex gap-2 items-center text-md text-neutral-600 ">
-                  <svg
-                    width="22"
-                    height="22"
-                    viewBox="0 0 22 22"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      d="M14.666 13.75H7.33268C5.30764 13.75 3.66602 15.3916 3.66602 17.4167V19.25H18.3327V17.4167C18.3327 15.3916 16.6911 13.75 14.666 13.75Z"
-                      stroke="#525252"
-                      stroke-width="1.375"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                    />
-                    <path
-                      d="M10.9993 10.0833C13.0244 10.0833 14.666 8.44171 14.666 6.41667C14.666 4.39162 13.0244 2.75 10.9993 2.75C8.97431 2.75 7.33268 4.39162 7.33268 6.41667C7.33268 8.44171 8.97431 10.0833 10.9993 10.0833Z"
-                      stroke="#525252"
-                      strokeWidth="1.375"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                  </svg>
-                  <h2 className="text-lg">Associated Patient</h2>
-                </div>
-                <div className="pt-1"></div>
-                <ArrowPatientCard
-                  name={recording.data?.patient.name}
-                  uniqueId={recording.data?.patient.uniqueId}
-                  patientId={recording.data?.patient.id.toString()}
-                />
-              </div>
-
-              <hr />
-              <div className="md:container py-8 space-y-3">
-                <div className="flex gap-2 items-center text-md text-neutral-600 ">
-                  <Mic size={20} />
-                  <h2 className="text-lg">Created from recording</h2>
-                </div>
-                {!recording.data ? (
-                  <LoadingCard />
-                ) : (
-                  <AudioCard
-                    id={recording.data?.recording.id}
-                    key={recording.data?.recording.id}
-                    name={recording.data?.recording.recordingName}
-                    recordedBy={recording.data?.patient.name}
-                    duration={
-                      recording.data?.recording.duration
-                        ? parseTimestamp(recording.data?.recording.duration, 2)
-                        : "--:--"
-                    }
-                    durationNumber={
-                      recording.data?.recording.duration ?? undefined
-                    }
-                    audioKey={recording.data?.recording.s3Key}
+        <TabsContent value="note-info" className="px-4 ">
+          <div className="md:container py-8 space-y-3">
+            <div className="flex gap-2 items-center text-md text-neutral-600 ">
+              <Cog size={20} />
+              <h2 className="text-lg">Note Configuration</h2>
+            </div>
+            <div className={"grid grid-cols-1 gap-2 lg:grid-cols-4"}>
+              {!noteQuery.data &&
+                new Array(4)
+                  .fill(0)
+                  .map((_, idx) => <LoadingNoteConfigCard key={idx} />)}
+              {!!noteQuery.data && (
+                <>
+                  <NoteConfigCard
+                    title="Preferred Length"
+                    content={noteQuery.data.preferredLength}
                   />
-                )}
-              </div>
-            </TabsContent>
-          </form>
-        </Form>
+                  {!!noteQuery.data.noteFormat && (
+                    <NoteConfigCard
+                      title="Note Format"
+                      content={noteQuery.data.noteFormat}
+                    />
+                  )}
+                  {!!noteQuery.data.noteSetting && (
+                    <NoteConfigCard
+                      title="Note Setting"
+                      content={capitalizeFirstLetter(
+                        noteQuery.data.noteSetting,
+                      )}
+                    />
+                  )}
+
+                  <NoteConfigCard
+                    title="Created At"
+                    content={new Date(noteQuery.data.createdAt).toDateString()}
+                  />
+
+                  {!!noteQuery.data?.customPrompt && (
+                    <div className="col-span-full">
+                      <NoteConfigCard
+                        title="Custom Prompt"
+                        content={noteQuery.data?.customPrompt}
+                      />
+                    </div>
+                  )}
+                </>
+              )}
+            </div>
+          </div>
+          <hr />
+          <div className="md:container py-8 space-y-3">
+            <div className="flex gap-2 items-center text-md text-neutral-600 ">
+              <svg
+                width="22"
+                height="22"
+                viewBox="0 0 22 22"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M14.666 13.75H7.33268C5.30764 13.75 3.66602 15.3916 3.66602 17.4167V19.25H18.3327V17.4167C18.3327 15.3916 16.6911 13.75 14.666 13.75Z"
+                  stroke="#525252"
+                  stroke-width="1.375"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+                <path
+                  d="M10.9993 10.0833C13.0244 10.0833 14.666 8.44171 14.666 6.41667C14.666 4.39162 13.0244 2.75 10.9993 2.75C8.97431 2.75 7.33268 4.39162 7.33268 6.41667C7.33268 8.44171 8.97431 10.0833 10.9993 10.0833Z"
+                  stroke="#525252"
+                  strokeWidth="1.375"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
+              <h2 className="text-lg">Associated Patient</h2>
+            </div>
+            <div className="pt-1"></div>
+            <ArrowPatientCard
+              name={recording.data?.patient.name}
+              uniqueId={recording.data?.patient.uniqueId}
+              patientId={recording.data?.patient.id.toString()}
+            />
+          </div>
+
+          <hr />
+          <div className="md:container py-8 space-y-3">
+            <div className="flex gap-2 items-center text-md text-neutral-600 ">
+              <Mic size={20} />
+              <h2 className="text-lg">Created from recording</h2>
+            </div>
+            {!recording.data ? (
+              <LoadingCard />
+            ) : (
+              <AudioCard
+                id={recording.data?.recording.id}
+                key={recording.data?.recording.id}
+                name={recording.data?.recording.recordingName}
+                recordedBy={recording.data?.patient.name}
+                duration={
+                  recording.data?.recording.duration
+                    ? parseTimestamp(recording.data?.recording.duration, 2)
+                    : "--:--"
+                }
+                durationNumber={recording.data?.recording.duration ?? undefined}
+                audioKey={recording.data?.recording.s3Key}
+              />
+            )}
+          </div>
+        </TabsContent>
       </Tabs>
 
       <div className="fixed bottom-0 inset-x-0">
@@ -315,6 +286,6 @@ const LoadingNoteConfigCard = () => {
   );
 };
 
-function capitalizeFirstLetter(string) {
+function capitalizeFirstLetter(string: string) {
   return string.charAt(0).toUpperCase() + string.slice(1);
 }
