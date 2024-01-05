@@ -4,16 +4,19 @@ import { NavWrapper } from "@/components/nav-parent";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, ChevronLeft, PencilLine, Trash2 } from "lucide-react";
 import Link from "next/link";
-import { useState } from "react";
+import { ReactNode, useState } from "react";
 import { RenameDialog } from "./rename-dialog";
 import { useRouter } from "next/navigation";
 
+
 type RecordingNavProps = {
   name: string;
-  onEdit: (newName: string) => void;
+  onEdit?: (newName: string) => void;
   onDelete: () => void;
-  resourceName: "patient" | "recording" | "note";
+  resourceName?: "patient" | "recording" | "note";
   fallbackBackRoute?: string;
+  customDialog?: ReactNode;
+  onEditButtonClick?: (e: any) => void;
 };
 
 export const ActionsNav = (props: RecordingNavProps) => {
@@ -39,7 +42,8 @@ export const ActionsNav = (props: RecordingNavProps) => {
             {props.name}
           </p>
           <button
-            onClick={() => {
+            onClick={(e) => {
+              props.onEditButtonClick?.(e)
               setOpen(true);
             }}
           >
@@ -55,13 +59,18 @@ export const ActionsNav = (props: RecordingNavProps) => {
           <Trash2 size={18} className="text-gray-500" />
         </Button>
       </NavWrapper>
-      <RenameDialog
-        resourceName={props.resourceName}
-        open={open}
-        setOpen={setOpen}
-        name={props.name}
-        onEdit={props.onEdit}
-      />
+
+      {!!props.customDialog ? (
+        props.customDialog
+      ) : (
+        <RenameDialog
+          resourceName={props.resourceName!}
+          open={open}
+          setOpen={setOpen}
+          name={props.name}
+          onEdit={props.onEdit!}
+        />
+      )}
     </>
   );
 };

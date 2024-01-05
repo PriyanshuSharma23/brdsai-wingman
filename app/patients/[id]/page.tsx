@@ -22,6 +22,11 @@ import { createAudioSourceFromKey, parseTimestamp } from "@/lib/utils";
 import { useAudioPlayerState } from "@/state/global-audio-player";
 import AudioPlayer from "@/components/audio/AudioPlayer";
 import { AUDIO_PLAYER_HEIGHT } from "@/lib/constants";
+import { PatientEditDialog } from "./patient-edit-dialog";
+import { useEditPatientMutation } from "@/queries/patient/edit-patient-mutation";
+import { toast } from "sonner";
+import { useDeletePatientMutation } from "@/queries/patient/delete-patient-mutation";
+import { useBack } from "@/queries/custom/useBack";
 
 type PatientPageProps = {
   params: {
@@ -29,20 +34,22 @@ type PatientPageProps = {
   };
 };
 const PatientPage = ({ params }: PatientPageProps) => {
+  let patientId = Number(params.id);
   const [isOpen, setIsOpen] = useState(true);
 
   const patientQuery = usePatientQuery({
-    patientId: Number(params.id),
+    patientId: patientId,
   });
 
   const recordingsQuery = useRecordingsByPatient({
-    patientId: Number(params.id),
+    patientId: patientId,
   });
 
   const router = useRouter();
   const notesQuery = useNotesByPatient({
-    patientId: Number(params.id),
+    patientId: patientId,
   });
+
   const {
     visible,
     setVisible,
@@ -50,13 +57,59 @@ const PatientPage = ({ params }: PatientPageProps) => {
     audioS3Key: audioSource,
   } = useAudioPlayerState();
 
+  const [openPatientEditModal, setOpenPatientEditModal] = useState(false);
+
+  const editPatientMutation = useEditPatientMutation();
+  const deletePatientMutation = useDeletePatientMutation();
+  const back = useBack("/patients");
+
   return (
     <main>
       <ActionsNav
-        resourceName="patient"
         name={!!patientQuery.data ? patientQuery.data.name : "Loading..."}
-        onEdit={function (newName: string): void {}}
-        onDelete={function (): void {}}
+        onDelete={function (): void {
+          deletePatientMutation.mutate(
+            {
+              id: patientId,
+            },
+            {
+              onSuccess: () => {
+                toast.success("Patient deleted");
+                back();
+              },
+              onError: (error) => {
+                toast.error(error.message);
+              },
+            },
+          );
+        }}
+        onEditButtonClick={() => setOpenPatientEditModal(true)}
+        customDialog={
+          <PatientEditDialog
+            open={openPatientEditModal}
+            setOpen={setOpenPatientEditModal}
+            isMutating={editPatientMutation.isPending}
+            onEdit={async (newName: string, newMrn: string) => {
+              editPatientMutation.mutate(
+                {
+                  name: newName,
+                  uniqueId: newMrn,
+                  id: patientId,
+                },
+                {
+                  onSuccess: () => {
+                    toast.success("Patient data updated");
+                  },
+                  onError: (error) => {
+                    toast.error(error.message);
+                  },
+                },
+              );
+            }}
+            name={!!patientQuery.data ? patientQuery.data.name : "Loading..."}
+            mrn={patientQuery.data?.uniqueId ?? undefined}
+          />
+        }
       />
 
       <div className="pt-6 ">
@@ -93,10 +146,9 @@ const PatientPage = ({ params }: PatientPageProps) => {
                   return <LoadingCard key={i} />;
                 })}
 
-              {
-                !!recordingsQuery.data && recordingsQuery.data.length === 0 && 
-                  <p>No recordings</p>
-              }
+              {!!recordingsQuery.data && recordingsQuery.data.length === 0 && (
+                <p className="italic text-gray-400 ">No recordings</p>
+              )}
 
               {!!recordingsQuery.data &&
                 recordingsQuery.data.map((recording) => {
@@ -150,6 +202,9 @@ const PatientPage = ({ params }: PatientPageProps) => {
                 noteId={note.id}
               />
             ))}
+            {!!notesQuery.data && notesQuery.data.length === 0 && (
+              <p className="italic text-gray-400 ">No recordings</p>
+            )}
           </div>
         </div>
       </div>

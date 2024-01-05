@@ -4,7 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 
 export const useAllPatientQuery = () => {
   return useQuery({
-    queryKey: ["patient"],
+    queryKey: ["patients"],
     queryFn: async () => {
       let resp = await request({
         method: "GET",

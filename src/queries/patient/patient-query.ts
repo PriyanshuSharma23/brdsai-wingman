@@ -7,7 +7,7 @@ type UsePatientQueryProps = {
 };
 export const usePatientQuery = ({ patientId }: UsePatientQueryProps) => {
   return useQuery({
-    queryKey: ["patient", patientId],
+    queryKey: ["patients", patientId],
     queryFn: async (params) => {
       let [, patientId] = params.queryKey as [string, number];
       let resp = await request({
