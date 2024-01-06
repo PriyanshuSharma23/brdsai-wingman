@@ -1,12 +1,7 @@
 "use client";
 import { Button } from "@/components/ui/button";
 import { PatientCard } from "./patients/patient-card";
-import {
-  ChevronRight,
-  Clock,
-  Mic,
-  PlusIcon,
-} from "lucide-react";
+import { ChevronRight, Clock, Mic, PlusIcon } from "lucide-react";
 import { ChipCard } from "@/components/chip-card";
 import { Note } from "@/components/svgs/note";
 import { useAllPatientQuery } from "@/queries/patient/all-patients-query";
@@ -31,11 +26,15 @@ export default function Home() {
 
   const name = useStore((s) => s.user?.fullName);
 
+  const getFirstName = (name: string) => {
+    return name.split(" ")[0];
+  };
+
   return (
     <>
-      <div className="px-4 md:px-12 xl:px-20 space-y-2 md:space-y-4 text-neutral-600 pt-6">
+      <div className="px-4 md:px-12 xl:px-20 space-y-2 md:space-y-4 text-neutral-600 py-5">
         <h1 className="text-blu text-2xl font-semibold flex gap-1 h-8">
-          <ClientOnly>Hi, {name}</ClientOnly>
+          <ClientOnly>Hi, {getFirstName(name || "")}</ClientOnly>
         </h1>
         <div className="flex gap-2 items-center text-lg text-neutral-600 pt-4">
           {patient}
@@ -109,8 +108,8 @@ export default function Home() {
             );
           })}
         </div>
-        <div className=""></div>
-        <Link href={"/record"}>
+        <div className="pt-1"></div>
+        <Link href={"/record"} className="block">
           <Button className="rounded-full  px-10 w-full max-w-sm gap-1">
             <span>New Recording</span>
             <PlusIcon size={18} />
@@ -137,7 +136,7 @@ export default function Home() {
                   <ChipCard
                     titleIcon={<Note className={"w-5"} />}
                     title={note.title}
-                    contentIcon={<Clock size={14} className="text-gray-400"/>}
+                    contentIcon={<Clock size={14} className="text-gray-400" />}
                     content={getTimeSinceUpdate(note.createdAt)}
                     className="space-y-3"
                   />

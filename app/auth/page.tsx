@@ -95,7 +95,7 @@ const Auth = () => {
         "/auth/verify?" +
           new URLSearchParams({
             email: user.email,
-          }),
+          })
       );
     } catch (e: any) {
       signUpForm.setError("root.serverCatch", {
@@ -109,13 +109,13 @@ const Auth = () => {
   //Account created successfully, please sign in.
 
   return (
-    <main className="relative flex flex-col justify-center items-center space-y-8 h-screen py-20">
+    <>
       <Image
         src={"/onboarding-fig-1.png"}
         alt="onboarding figure 1"
         width={290}
         height={343}
-        className="w-2/3 top-0 left-0 -translate-y-1/2  fixed -z-50 max-w-md"
+        className="w-2/3 top-0 left-0 -translate-y-1/2  fixed -z-50 max-w-md opacity-50"
         priority
       />
 
@@ -124,16 +124,16 @@ const Auth = () => {
         alt="onboarding figure 2"
         width={245.5}
         height={180.7}
-        className=" bottom-20 md:bottom-10 right-0   fixed -z-50 max-w-md"
+        className="bottom-16 md:bottom-10 right-0   fixed -z-50 max-w-md opacity-40"
         priority
       />
 
       <Image
         src={"/Logo.png"}
         alt={"brds"}
-        width={(273 / 78)*60}
+        width={(273 / 78) * 60}
         height={60}
-        className="pt-20 w-48"
+        className="pt-0 w-56"
       />
       <Switch loginState={loginState} setLoginState={setLoginState} />
 
@@ -142,7 +142,7 @@ const Auth = () => {
       ) : (
         <SignUpForm signUpForm={signUpForm} onSubmit={onSignUpSubmit} />
       )}
-    </main>
+    </>
   );
 };
 
@@ -167,8 +167,20 @@ const Switch = (props: SwitchProps) => {
       onClick={toggle}
       className="h-10 bg-slate-100 flex max-w-max items-center text-center relative isolate rounded-full text-primary  text-sm gap-2 flex-shrink-0"
     >
-      <p className={cn("w-20 transition-all translate-x-1")}>Sign In</p>
-      <p className={cn("w-20 transition-all -translate-x-1")}>Sign Up</p>
+      <p
+        className={cn(
+          "w-20 transition-all translate-x-1 font-medium text-[#0F172A]"
+        )}
+      >
+        Login
+      </p>
+      <p
+        className={cn(
+          "w-20 transition-all -translate-x-1 font-medium text-[#0F172A]"
+        )}
+      >
+        Sign Up
+      </p>
       <div
         className="bg-white h-8 w-20 absolute -z-10 rounded-full transition-all"
         style={{

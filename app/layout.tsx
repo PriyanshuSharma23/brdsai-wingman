@@ -1,6 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import NextTopLoader from "nextjs-toploader";
-import { Poppins } from "next/font/google";
+import { Poppins, Inter } from "next/font/google";
 import "./globals.css";
 import "./custom-progress-bar.css";
 import { Toaster } from "sonner";
@@ -9,6 +9,12 @@ import Provider from "@/components/provider";
 const poppins = Poppins({
   weight: ["100", "200", "300", "500", "600", "700", "800", "900"],
   subsets: ["latin"],
+});
+
+const inter = Inter({
+  weight: "variable",
+  subsets: ["latin"],
+  display: "swap",
 });
 
 export const metadata: Metadata = {
@@ -138,7 +144,7 @@ export default function RootLayout({
           content="https://wingman.brdsai.com/logo-base.png"
         />
       </head>
-      <body className={poppins.className}>
+      <body className={inter.className}>
         <NextTopLoader color="#035879" showSpinner={false} />
         <Provider>{children}</Provider>
       </body>

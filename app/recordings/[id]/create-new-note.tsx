@@ -90,7 +90,7 @@ export function CreateNewNote({
       !(values.noteSetting && values.noteSetting)
     ) {
       toast.error(
-        "Either enter a prompt or choose one of the pre-built defaults",
+        "Either enter a prompt or choose one of the pre-built defaults"
       );
       return;
     }
@@ -108,7 +108,7 @@ export function CreateNewNote({
           closeWindow();
           router.push(`/notes/${data.id}`);
         },
-      },
+      }
     );
   };
 
@@ -118,17 +118,16 @@ export function CreateNewNote({
     <Sheet open={open} onOpenChange={onOpenChange}>
       <SheetContent className="min-w-[100%] p-0 overflow-y-scroll">
         <NavWrapper>
-          <div className="flex items-center text-primary gap-4">
+          <div className="flex items-center text-primary gap-4 py-2">
             <button className="translate-y-[2px]" onClick={closeWindow}>
               <ArrowLeft size={20} className="text-gray-500" />
             </button>
             <p className="overflow-hidden text-ellipsis line-clamp-1 max-w-max translate-y-[2px] text-neutral-600">
-              Create note from{" "}
-              <span className="text-blu">{recordingName}</span>
+              Create note from <span className="text-blu">{recordingName}</span>
             </p>
           </div>
         </NavWrapper>
-        <div className="pt-8"></div>
+        <div className="pt-4"></div>
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(onSubmit)}
@@ -140,9 +139,7 @@ export function CreateNewNote({
               render={({ field }) => {
                 return (
                   <FormItem>
-                    <FormLabel>
-                      Add your prompt here
-                    </FormLabel>
+                    <FormLabel>Add your prompt here</FormLabel>
                     <FormControl>
                       <Textarea
                         placeholder="Example: Create a consult note for this patient and summarize the medical history"
@@ -191,7 +188,7 @@ export function CreateNewNote({
                             disabled={!usingCustom}
                           >
                             <SelectTrigger className="">
-                              <SelectValue placeholder="Select a patient" />
+                              <SelectValue placeholder="Select a format" />
                             </SelectTrigger>
                             <SelectContent
                               onBlur={field.onBlur}
@@ -243,6 +240,7 @@ export function CreateNewNote({
                               ref={field.ref}
                             >
                               <SelectGroup>
+                         
                                 {noteSetting.map((setting) => (
                                   <SelectItem
                                     value={setting.toString()}

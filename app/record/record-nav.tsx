@@ -18,7 +18,7 @@ export const RecordNav = (props: RecordNavProps) => {
 
   return (
     <NavWrapper>
-      <div className="flex items-center text-primary gap-2">
+      <div className="flex items-center text-primary gap-2 py-2">
         <button className="translate-y-[2px]" onClick={back}>
           <ArrowLeft size={20} className="text-gray-500" />
         </button>

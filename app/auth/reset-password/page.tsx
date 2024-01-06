@@ -42,10 +42,10 @@ export default function ForgetPasswordPage() {
     try {
       const res = await auth.resetPassword(
         password,
-        params.get("id") as string,
+        params.get("id") as string
       );
       if (res) {
-        setPasswordReset(true)
+        setPasswordReset(true);
       } else {
         form.setError("root.serverCatch", {
           type: "server",
@@ -128,7 +128,9 @@ export default function ForgetPasswordPage() {
               render={({ field }) => {
                 return (
                   <FormItem>
-                    <FormLabel>Password*</FormLabel>
+                    <FormLabel className="text-[#525252]">
+                      Password<span className="text-[#EF4E4E]">*</span>
+                    </FormLabel>
                     <FormControl>
                       <Input
                         placeholder="Enter a secure password"
@@ -147,7 +149,7 @@ export default function ForgetPasswordPage() {
                   {form.formState.errors.root.serverCatch.message}
                 </p>
               )}
-            <Button className="bg-blu rounded-full w-full hover:bg-blu hover:brightness-110 transition-all text-base">
+            <Button className="bg-blu rounded-full w-full hover:bg-blu hover:brightness-110 transition-all text-sm font-medium">
               Reset Password
             </Button>
           </form>

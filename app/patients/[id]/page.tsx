@@ -112,7 +112,7 @@ const PatientPage = ({ params }: PatientPageProps) => {
         }
       />
 
-      <div className="pt-6 ">
+      <div className="pt-5">
         <div className="px-4 md:px-16">
           <Collapsible
             open={isOpen}

@@ -55,13 +55,13 @@ export function AddPatientModal({
           toast.success("Patient created");
           closeModal();
         },
-      },
+      }
     );
   };
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[425px]">
+      <DialogContent className="max-w-[390px] sm:max-w-[425px]">
         <DialogHeader>
           <DialogTitle>Add Patient</DialogTitle>
           <DialogDescription>
@@ -80,7 +80,9 @@ export function AddPatientModal({
                 render={({ field }) => {
                   return (
                     <FormItem>
-                      <FormLabel>Patient Name*</FormLabel>
+                      <FormLabel className="text-black">
+                        Patient Name<span className="text-[#EF4E4E]">*</span>
+                      </FormLabel>
                       <FormControl>
                         <Input placeholder="Mr. Bojangles" {...field} />
                       </FormControl>
@@ -95,7 +97,7 @@ export function AddPatientModal({
                 render={({ field }) => {
                   return (
                     <FormItem>
-                      <FormLabel>MRN</FormLabel>
+                      <FormLabel className="text-black">MRN</FormLabel>
                       <FormControl>
                         <Input placeholder="MRN-5632-8975" {...field} />
                       </FormControl>

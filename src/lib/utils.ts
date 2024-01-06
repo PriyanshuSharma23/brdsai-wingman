@@ -63,7 +63,7 @@ export function getTimeSinceUpdate(updatedAt: string) {
       minutes === 1 ? "minute" : "minutes"
     } ago`;
   } else {
-    return `Last updated ${seconds} ${
+    return `${seconds} ${
       seconds === 1 ? "second" : "seconds"
     } ago`;
   }
