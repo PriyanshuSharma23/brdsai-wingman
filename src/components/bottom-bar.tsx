@@ -84,9 +84,9 @@ export const BottomBar = () => {
           />
         </div>
       )}
-      <div className="border-t">
+      <div className="border-t py-2 bg-white">
         <div
-          className="flex container justify-between  bg-white"
+          className="flex justify-between  bg-white mx-4 md:container"
           style={{
             height: `${BOTTOM_BAR_HEIGHT}px`,
           }}
@@ -95,7 +95,7 @@ export const BottomBar = () => {
             <button
               key={path.name}
               className={cn(
-                "py-2  flex flex-col items-center",
+                "flex flex-col items-center w-28 flex-shrink-0 justify-center",
                 pathname == key ? "text-blu hover:text-blu" : "text-gray-400"
               )}
               onClick={() => router.push(key)}
