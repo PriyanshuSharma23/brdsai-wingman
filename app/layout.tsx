@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import NextTopLoader from "nextjs-toploader";
 import { Poppins } from "next/font/google";
 import "./globals.css";
@@ -15,6 +15,13 @@ export const metadata: Metadata = {
   title: "Brdsai Wingman",
   description: "Standaline audio recording for brdsai",
 };
+
+export const viewport: Viewport = {
+  maximumScale: 1.0,
+  initialScale: 1.0,
+  width: "device-width",
+  userScalable: false,
+}
 
 export default function RootLayout({
   children,
@@ -89,10 +96,6 @@ export default function RootLayout({
         <meta
           property="og:image"
           content="https://wingman.brdsai.com/logo-base.png"
-        />
-        <meta
-          name="viewport"
-          content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"
         />
       </head>
       <body className={poppins.className}>
