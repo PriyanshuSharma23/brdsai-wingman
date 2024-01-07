@@ -29,7 +29,7 @@ export const useCreatePatientMutation = () => {
       return response.data;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["patient"] });
+      queryClient.invalidateQueries({ queryKey: ["patients"] });
     },
   });
 };
