@@ -29,6 +29,7 @@ import { toast } from "sonner";
 import { ArrowPatientCard } from "@/components/arrow-patient-card";
 import { LoadingCard } from "@/components/loading-card";
 import { DNA } from "react-loader-spinner";
+import { useEditRecordingMutation } from "@/queries/recording/update-recording-mutation";
 
 type RecordingPageParams = {
   params: {
@@ -66,6 +67,7 @@ export default function RecordingsPage(params: RecordingPageParams) {
     return timestamp >= start && timestamp <= end;
   };
 
+  const editRecordingMutation = useEditRecordingMutation();
   const deleteMutation = useDeleteRecordingMutation();
   const router = useRouter();
 
@@ -75,7 +77,27 @@ export default function RecordingsPage(params: RecordingPageParams) {
         resourceName="recording"
         fallbackBackRoute="/recordings"
         name={recordingQuery.data?.recording.recordingName ?? "Loading..."}
-        onEdit={function (newName: string): void {}}
+        isMutating={editRecordingMutation.isPending || deleteMutation.isPending}
+        onEdit={function (newName: string): void {
+          let patientId = recordingQuery.data?.patient.id;
+          if (!patientId) return;
+
+          editRecordingMutation.mutate(
+            {
+              id: Number(params.params.id),
+              recordingName: newName,
+              patientId,
+            },
+            {
+              onSuccess: () => {
+                toast.success("Updated recording");
+              },
+              onError: () => {
+                toast.error("Error updating recording");
+              },
+            },
+          );
+        }}
         onDelete={function (): void {
           deleteMutation.mutate(params.params.id, {
             onSuccess: () => {
@@ -173,11 +195,11 @@ export default function RecordingsPage(params: RecordingPageParams) {
                 </CollapsibleTrigger>
               </div>
               <CollapsibleContent className=" flex flex-col gap-4 md:grid md:grid-cols-2 xl:grid-cols-3">
-                {
-                  !!notesQuery.data && notesQuery.data.length === 0 && <p className="italic text-gray-400 ">
+                {!!notesQuery.data && notesQuery.data.length === 0 && (
+                  <p className="italic text-gray-400 ">
                     No notes associated with this recording
                   </p>
-                }
+                )}
                 {!!notesQuery.data
                   ? notesQuery.data?.map((note) => (
                       <NoteCard

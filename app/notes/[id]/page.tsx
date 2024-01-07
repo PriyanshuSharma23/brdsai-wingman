@@ -1,52 +1,24 @@
 "use client";
 import { useNoteQuery } from "@/queries/recording/note-query";
 import { ActionsNav } from "../../recordings/recording-nav";
-import { useEffect } from "react";
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { DummyBlock, TagNames } from "./dummy-block";
 import { ArrowPatientCard } from "@/components/arrow-patient-card";
-import { usePatientQuery } from "@/queries/patient/patient-query";
 import { Cog, Mic } from "lucide-react";
 import { AudioCard } from "@/components/audio-card";
 import { useRecordingQuery } from "@/queries/recording/recording-query";
-import { cn, createAudioSourceFromKey, parseTimestamp } from "@/lib/utils";
+import { createAudioSourceFromKey, parseTimestamp } from "@/lib/utils";
 import { LoadingCard } from "@/components/loading-card";
 import AudioPlayer from "@/components/audio/AudioPlayer";
 import { AUDIO_PLAYER_HEIGHT } from "@/lib/constants";
 import { useAudioPlayerState } from "@/state/global-audio-player";
-import { useForm } from "react-hook-form";
 
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
-
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectLabel,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-
-import * as z from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { Button } from "@/components/ui/button";
 import { DNA } from "react-loader-spinner";
-
-const noteTypes = [
-  "History & Physical",
-  "Progress Note",
-  "Consult Note",
-  "Discharge Summary",
-];
+import { useUpdateNoteMutation } from "@/queries/recording/update-note-mutation";
+import { useDeleteNoteMutation } from "@/queries/recording/delete-note-mutation";
+import { useBack } from "@/queries/custom/useBack";
+import { toast } from "sonner";
 
 type RecordingPageParams = {
   params: {
@@ -70,14 +42,45 @@ export default function PatientsPage(params: RecordingPageParams) {
     audioS3Key: audioSource,
   } = useAudioPlayerState();
 
+  const editNoteMutation = useUpdateNoteMutation();
+  const deleteNoteMutation = useDeleteNoteMutation();
+
+  const back = useBack("/");
+
   return (
     <main className="flex flex-col">
       <ActionsNav
         resourceName="note"
         fallbackBackRoute="/note"
         name={noteQuery.data?.title ?? "Unnamed Note"}
-        onEdit={function (newName: string): void {}}
-        onDelete={function (): void {}}
+        isMutating={editNoteMutation.isPending || deleteNoteMutation.isPending}
+        onEdit={function (newName: string): void {
+          editNoteMutation.mutate(
+            {
+              title: newName,
+              id: params.params.id,
+            },
+            {
+              onSuccess: () => {
+                toast.success("Updated note");
+              },
+              onError: () => {
+                toast.error("Error updating note");
+              },
+            },
+          );
+        }}
+        onDelete={function (): void {
+          deleteNoteMutation.mutate(params.params.id, {
+            onSuccess: () => {
+              toast.success("Deleted note");
+              back();
+            },
+            onError: () => {
+              toast.error("Error deleting note");
+            },
+          });
+        }}
       />
 
       <Tabs defaultValue="note-editor">

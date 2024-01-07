@@ -15,6 +15,7 @@ type RenameDialogProps = {
   name: string;
   onEdit: (newName: string) => void;
   resourceName: "patient" | "recording" | "note";
+  isMutating?: boolean
 };
 
 export const RenameDialog = ({
@@ -23,6 +24,7 @@ export const RenameDialog = ({
   name,
   onEdit,
   resourceName,
+  isMutating
 }: RenameDialogProps) => {
   const [newName, setNewName] = useState(name);
 
@@ -61,7 +63,7 @@ export const RenameDialog = ({
             className="mt-4 w-full rounded-full py-6 text-base"
             variant={"outline"}
             type="submit"
-            disabled={newName === name}
+            disabled={newName === name || isMutating}
           >
             Rename
           </Button>

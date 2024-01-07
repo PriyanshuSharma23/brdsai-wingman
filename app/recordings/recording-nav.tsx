@@ -8,7 +8,6 @@ import { ReactNode, useState } from "react";
 import { RenameDialog } from "./rename-dialog";
 import { useRouter } from "next/navigation";
 
-
 type RecordingNavProps = {
   name: string;
   onEdit?: (newName: string) => void;
@@ -17,6 +16,7 @@ type RecordingNavProps = {
   fallbackBackRoute?: string;
   customDialog?: ReactNode;
   onEditButtonClick?: (e: any) => void;
+  isMutating?: boolean;
 };
 
 export const ActionsNav = (props: RecordingNavProps) => {
@@ -43,7 +43,7 @@ export const ActionsNav = (props: RecordingNavProps) => {
           </p>
           <button
             onClick={(e) => {
-              props.onEditButtonClick?.(e)
+              props.onEditButtonClick?.(e);
               setOpen(true);
             }}
           >
@@ -55,6 +55,7 @@ export const ActionsNav = (props: RecordingNavProps) => {
           className="self-center"
           variant={"ghost"}
           onClick={props.onDelete}
+          disabled={props.isMutating}
         >
           <Trash2 size={18} className="text-gray-500" />
         </Button>
@@ -69,6 +70,7 @@ export const ActionsNav = (props: RecordingNavProps) => {
           setOpen={setOpen}
           name={props.name}
           onEdit={props.onEdit!}
+          isMutating={props.isMutating}
         />
       )}
     </>

@@ -12,7 +12,7 @@ export const useNoteQuery = ({ noteId }: UseNoteQueryProps) => {
   const [refetchInterval, setRefetchInterval] = useState<number | false>(DEFAULT_RETRY_INTERVAL);
 
   let noteQuery = useQuery({
-    queryKey: ["note", noteId],
+    queryKey: ["notes", noteId],
     queryFn: async (params) => {
       let [, noteId] = params.queryKey as string[];
 
