@@ -189,29 +189,6 @@ export const SaveRecording = (props: SaveRecordingProps) => {
                                     Add Patient
                                   </button>
                                 </SelectGroup>
-                                <SelectGroup>
-                                  <SelectLabel>Patients</SelectLabel>
-                                  {patientsQuery.data?.map((patient) => (
-                                    <SelectItem
-                                      value={patient.id.toString()}
-                                      key={patient.id}
-                                    >
-                                      {patient.name}
-                                    </SelectItem>
-                                  ))}
-                                  <button
-                                    value="add-patient"
-                                    onClick={(e) => {
-                                      e.preventDefault();
-                                      e.stopPropagation();
-                                      setModalOpen(true);
-                                    }}
-                                    className="relative flex w-full cursor-default select-none items-center rounded-sm py-1.5 pl-8 pr-0 text-sm outline-none focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50 gap-2 text-blu"
-                                  >
-                                    <PlusCircle size={18} />
-                                    Add Patient
-                                  </button>
-                                </SelectGroup>
                               </SelectContent>
                             </Select>
                           </FormControl>
