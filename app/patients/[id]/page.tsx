@@ -67,7 +67,7 @@ const PatientPage = ({ params }: PatientPageProps) => {
     <main>
       <ActionsNav
         name={!!patientQuery.data ? patientQuery.data.name : "Loading..."}
-        onDelete={function (): void {
+        onDelete={function(): void {
           deletePatientMutation.mutate(
             {
               id: patientId,
@@ -173,7 +173,7 @@ const PatientPage = ({ params }: PatientPageProps) => {
 
           <Button
             className="w-full max-w-sm rounded-full mt-4"
-            onClick={() => router.push("/record")}
+            onClick={() => router.push("/record?patientId=" + params.id.toString())}
           >
             + New Recording
           </Button>

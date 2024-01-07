@@ -27,8 +27,13 @@ if (!supportsWebm) {
     })
 }
 
+type RecordPageProps = {
+  initialPatientId: string | null;
+}
 
-const RecordPage = () => {
+const RecordPage = ({
+  initialPatientId
+}: RecordPageProps) => {
   const {
     isRecording,
     togglePauseResume,
@@ -49,7 +54,7 @@ const RecordPage = () => {
   useEffect(() => {
     if (!firstTimeRef.current) startRecording();
     firstTimeRef.current = true;
-    return () => {};
+    return () => { };
   }, [startRecording]); // TODO: WHY UHHHH!!!!
 
   useEffect(() => {
@@ -133,6 +138,7 @@ const RecordPage = () => {
           }}
           audioSource={audioSource}
           duration={duration}
+          initialPatientId={initialPatientId}
         />
       )}
     </>

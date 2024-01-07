@@ -46,10 +46,14 @@ interface SaveRecordingProps {
   closeWindow: () => void;
   audioSource: string | undefined;
   recordingBlob?: Blob;
+  initialPatientId: string | null;
 }
 export const SaveRecording = (props: SaveRecordingProps) => {
   const form = useForm<z.infer<typeof addPatientSchema>>({
     resolver: zodResolver(addPatientSchema),
+    defaultValues: {
+      patient: props.initialPatientId ?? undefined,
+    }
   });
 
   const patientsQuery = useAllPatientQuery();
@@ -156,7 +160,31 @@ export const SaveRecording = (props: SaveRecordingProps) => {
                               <SelectContent
                                 onBlur={field.onBlur}
                                 ref={field.ref}
+                                className="max-h-[15rem]"
                               >
+                                <SelectGroup>
+                                  <SelectLabel>Patients</SelectLabel>
+                                  {patientsQuery.data?.map((patient) => (
+                                    <SelectItem
+                                      value={patient.id.toString()}
+                                      key={patient.id}
+                                    >
+                                      {patient.name}
+                                    </SelectItem>
+                                  ))}
+                                  <button
+                                    value="add-patient"
+                                    onClick={(e) => {
+                                      e.preventDefault();
+                                      e.stopPropagation();
+                                      setModalOpen(true);
+                                    }}
+                                    className="relative flex w-full cursor-default select-none items-center rounded-sm py-1.5 pl-8 pr-0 text-sm outline-none focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50 gap-2 text-blu"
+                                  >
+                                    <PlusCircle size={18} />
+                                    Add Patient
+                                  </button>
+                                </SelectGroup>
                                 <SelectGroup>
                                   <SelectLabel>Patients</SelectLabel>
                                   {patientsQuery.data?.map((patient) => (
@@ -212,3 +240,5 @@ export const SaveRecording = (props: SaveRecordingProps) => {
     </>
   );
 };
+
+// create a fibbo
