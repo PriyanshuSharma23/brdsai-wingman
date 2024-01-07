@@ -53,15 +53,17 @@ export const SignUpForm = ({ signUpForm, onSubmit }: SignUpFormProps) => {
     <Form {...signUpForm}>
       <form
         onSubmit={signUpForm.handleSubmit(onSubmit)}
-        className="space-y-4 container max-w-lg flex flex-col flex-1 "
+        className="space-y-4  flex flex-col flex-1 w-full sm:max-w-lg px-4"
       >
         <FormField
           control={signUpForm.control}
           name="name"
           render={({ field }) => {
             return (
-              <FormItem>
-                <FormLabel>Name*</FormLabel>
+              <FormItem className="space-y-1">
+                <FormLabel className="text-[#525252]">
+                  Name<span className="text-[#EF4E4E]">*</span>
+                </FormLabel>
                 <FormControl>
                   <Input placeholder="John Doe" {...field} />
                 </FormControl>
@@ -75,10 +77,12 @@ export const SignUpForm = ({ signUpForm, onSubmit }: SignUpFormProps) => {
           name="email"
           render={({ field }) => {
             return (
-              <FormItem>
-                <FormLabel>Email*</FormLabel>
+              <FormItem className="space-y-1">
+                <FormLabel className="text-[#525252]">
+                  Email<span className="text-[#EF4E4E]">*</span>
+                </FormLabel>
                 <FormControl>
-                  <Input placeholder="fizz@buzz.com" {...field} />
+                  <Input placeholder="fizz@buzz.com" type="email" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -90,8 +94,10 @@ export const SignUpForm = ({ signUpForm, onSubmit }: SignUpFormProps) => {
           name="password"
           render={({ field }) => {
             return (
-              <FormItem>
-                <FormLabel>Password</FormLabel>
+              <FormItem className="space-y-1">
+                <FormLabel className="text-[#525252]">
+                  Password<span className="text-[#EF4E4E]">*</span>
+                </FormLabel>
                 <FormControl>
                   <Input
                     placeholder="Enter a secure password"
@@ -113,10 +119,10 @@ export const SignUpForm = ({ signUpForm, onSubmit }: SignUpFormProps) => {
           )}
         <p></p>
 
-        <div className="flex-1"></div>
+        <div className="flex-1 max-h-16"></div>
 
-        <div className="space-y-2">
-          <Button className="bg-blu rounded-full w-full hover:bg-blu hover:brightness-110 transition-all text-base">
+        <div className="space-y-3">
+          <Button className="bg-blu rounded-full w-full hover:bg-blu hover:brightness-110 transition-all text-sm font-medium">
             Sign Up
           </Button>
           <Button variant={"outline"} className="gap-2 w-full rounded-full">
@@ -127,7 +133,7 @@ export const SignUpForm = ({ signUpForm, onSubmit }: SignUpFormProps) => {
               height={100}
               className="w-5 aspect-square"
             />
-            <span className="text-base">Continue With Google</span>
+            <span className="text-sm font-medium text-blu">Continue With Google</span>
           </Button>
         </div>
       </form>

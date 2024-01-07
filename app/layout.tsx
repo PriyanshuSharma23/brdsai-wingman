@@ -1,6 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import NextTopLoader from "nextjs-toploader";
-import { Poppins } from "next/font/google";
+import { Poppins, Inter } from "next/font/google";
 import "./globals.css";
 import "./custom-progress-bar.css";
 import { Toaster } from "sonner";
@@ -9,6 +9,12 @@ import Provider from "@/components/provider";
 const poppins = Poppins({
   weight: ["100", "200", "300", "500", "600", "700", "800", "900"],
   subsets: ["latin"],
+});
+
+const inter = Inter({
+  weight: "variable",
+  subsets: ["latin"],
+  display: "swap",
 });
 
 export const metadata: Metadata = {
@@ -21,7 +27,7 @@ export const viewport: Viewport = {
   initialScale: 1.0,
   width: "device-width",
   userScalable: false,
-}
+};
 
 export default function RootLayout({
   children,
@@ -43,23 +49,58 @@ export default function RootLayout({
         <meta name="msapplication-tap-highlight" content="no" />
         <meta name="theme-color" content="#035879" />
 
-        <link rel="apple-touch-icon" href="/icons/touch-icon-iphone.png" />
+        <link rel="apple-touch-icon" href="/icons/apple-icon.png" />
+        <link
+          rel="apple-touch-icon"
+          sizes="57x57"
+          href="/icons/apple-icon-57x57.png"
+        />
+        <link
+          rel="apple-touch-icon"
+          sizes="60x60"
+          href="/icons/apple-icon-60x60.png"
+        />
+        <link
+          rel="apple-touch-icon"
+          sizes="72x72"
+          href="/icons/apple-icon-72x72.png"
+        />
+        <link
+          rel="apple-touch-icon"
+          sizes="76x76"
+          href="/icons/apple-icon-76x76.png"
+        />
+        <link
+          rel="apple-touch-icon"
+          sizes="114x114"
+          href="/icons/apple-icon-114x114.png"
+        />
+        <link
+          rel="apple-touch-icon"
+          sizes="120x120"
+          href="/icons/apple-icon-120x120.png"
+        />
+        <link
+          rel="apple-touch-icon"
+          sizes="144x144"
+          href="/icons/apple-icon-144x144.png"
+        />
         <link
           rel="apple-touch-icon"
           sizes="152x152"
-          href="/icons/touch-icon-ipad.png"
+          href="/icons/apple-icon-152x152.png"
         />
         <link
           rel="apple-touch-icon"
           sizes="180x180"
-          href="/icons/touch-icon-iphone-retina.png"
+          href="/icons/apple-icon-180x180.png"
         />
         <link
-          rel="apple-touch-icon"
-          sizes="167x167"
-          href="/icons/touch-icon-ipad-retina.png"
+          rel="icon"
+          type="image/png"
+          sizes="192x192"
+          href="/icons/android-icon-192x192.png"
         />
-
         <link
           rel="icon"
           type="image/png"
@@ -69,17 +110,22 @@ export default function RootLayout({
         <link
           rel="icon"
           type="image/png"
+          sizes="96x96"
+          href="/icons/favicon-96x96.png"
+        />
+        <link
+          rel="icon"
+          type="image/png"
           sizes="16x16"
           href="/icons/favicon-16x16.png"
         />
         <link rel="manifest" href="/manifest.json" />
-        <link
-          rel="mask-icon"
-          href="/icons/safari-pinned-tab.svg"
-          color="#5bbad5"
-        />
         <link rel="shortcut icon" href="/favicon.png" />
-
+        <meta name="msapplication-TileColor" content="#ffffff" />
+        <meta
+          name="msapplication-TileImage"
+          content="/icons/ms-icon-144x144.png"
+        ></meta>
         <meta name="twitter:card" content="Brdsai Wingman" />
         <meta name="twitter:url" content="https://wingman.brdsai.com" />
         <meta name="twitter:title" content="Brdsai Wingman" />
@@ -98,7 +144,7 @@ export default function RootLayout({
           content="https://wingman.brdsai.com/logo-base.png"
         />
       </head>
-      <body className={poppins.className}>
+      <body className={inter.className}>
         <NextTopLoader color="#035879" showSpinner={false} />
         <Provider>{children}</Provider>
       </body>

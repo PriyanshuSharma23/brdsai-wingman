@@ -30,8 +30,8 @@ export default function ForgetPasswordPage() {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      email: ""
-    }
+      email: "",
+    },
   });
 
   const [emailSent, setEmailSent] = useState(false);
@@ -66,7 +66,7 @@ export default function ForgetPasswordPage() {
         height={180.7}
         className={`${
           !emailSent ? "bottom-28" : "top-8"
-        } md:bottom-10 right-0  fixed -z-50 max-w-md`}
+        } md:bottom-10 right-0  fixed -z-50 max-w-md opacity-40`}
         priority
       />
       <Image
@@ -74,7 +74,7 @@ export default function ForgetPasswordPage() {
         alt="onboarding figure 1"
         width={290}
         height={343}
-        className={`w-3/4 bottom-0 left-0 translate-y-1/4  fixed -z-50 max-w-md `}
+        className={`w-3/4 bottom-0 left-0 translate-y-1/4  fixed -z-50 max-w-md opacity-40`}
         priority
       />
       <div className="fixed inset-x-0 top-0 -translate-y-8">
@@ -101,11 +101,11 @@ export default function ForgetPasswordPage() {
           alt={"brds"}
           width={273}
           height={78}
-          className=" mx-auto "
+          className=" mx-auto w-56"
         />
       )}
 
-      <p className="text-lg text-neutral-700 max-w-[30ch] mx-auto text-center pt-5">
+      <p className="text-lg text-neutral-700 max-w-[30ch] mx-auto text-center pt-5 leading-snug">
         {!emailSent ? (
           "We’ll send a password reset link on your registed email"
         ) : (
@@ -128,7 +128,9 @@ export default function ForgetPasswordPage() {
               render={({ field }) => {
                 return (
                   <FormItem>
-                    <FormLabel>Email*</FormLabel>
+                    <FormLabel className="text-[#525252]">
+                      Email<span className="text-[#EF4E4E]">*</span>
+                    </FormLabel>
                     <FormControl>
                       <Input placeholder="fizz@buzz.com" {...field} />
                     </FormControl>
@@ -143,7 +145,7 @@ export default function ForgetPasswordPage() {
                   {form.formState.errors.root.serverCatch.message}
                 </p>
               )}
-            <Button className="bg-blu rounded-full w-full hover:bg-blu hover:brightness-110 transition-all text-base">
+            <Button className="bg-blu rounded-full w-full hover:bg-blu hover:brightness-110 transition-all text-sm font-medium ">
               Proceed
             </Button>
           </form>

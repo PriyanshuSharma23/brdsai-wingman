@@ -84,7 +84,7 @@ export default function PatientsPage(params: RecordingPageParams) {
       />
 
       <Tabs defaultValue="note-editor">
-        <div className="sticky top-[4.5rem] bg-white z-10">
+        <div className="sticky top-[3.5rem] bg-white z-10">
           <TabsList className="grid w-full grid-cols-2 bg-white ">
             <TabsTrigger
               value="note-editor"
@@ -101,7 +101,7 @@ export default function PatientsPage(params: RecordingPageParams) {
           </TabsList>
         </div>
 
-        <TabsContent value="note-editor" className="md:container py-8 px-4">
+        <TabsContent value="note-editor" className="md:container py-4 px-4">
           {!noteQuery.data?.isProcessed && (
             <div className="flex items-center gap-2 text-neutral-500 justify-center relative">
               <div className="text-center pt-20 flex flex-col items-center">
@@ -116,7 +116,7 @@ export default function PatientsPage(params: RecordingPageParams) {
           )}
           {noteQuery.data?.blocks?.map((b, i) => (
             <>
-              {i !== 0 && b.tagName === "h2" && <div className=" my-4" />}
+              {i !== 0 && b.tagName === "h2" && <div className="my-4" />}
               <DummyBlock
                 key={i}
                 block={{
@@ -130,7 +130,7 @@ export default function PatientsPage(params: RecordingPageParams) {
           <div className="pt-20"></div>
         </TabsContent>
         <TabsContent value="note-info" className="px-4 ">
-          <div className="md:container py-8 space-y-3">
+          <div className="md:container py-3 space-y-3">
             <div className="flex gap-2 items-center text-md text-neutral-600 ">
               <Cog size={20} />
               <h2 className="text-lg">Note Configuration</h2>
@@ -179,7 +179,7 @@ export default function PatientsPage(params: RecordingPageParams) {
             </div>
           </div>
           <hr />
-          <div className="md:container py-8 space-y-3">
+          <div className="md:container py-6 space-y-3">
             <div className="flex gap-2 items-center text-md text-neutral-600 ">
               <svg
                 width="22"
@@ -191,9 +191,9 @@ export default function PatientsPage(params: RecordingPageParams) {
                 <path
                   d="M14.666 13.75H7.33268C5.30764 13.75 3.66602 15.3916 3.66602 17.4167V19.25H18.3327V17.4167C18.3327 15.3916 16.6911 13.75 14.666 13.75Z"
                   stroke="#525252"
-                  stroke-width="1.375"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
+                  strokeWidth="1.375"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
                 />
                 <path
                   d="M10.9993 10.0833C13.0244 10.0833 14.666 8.44171 14.666 6.41667C14.666 4.39162 13.0244 2.75 10.9993 2.75C8.97431 2.75 7.33268 4.39162 7.33268 6.41667C7.33268 8.44171 8.97431 10.0833 10.9993 10.0833Z"
@@ -214,7 +214,7 @@ export default function PatientsPage(params: RecordingPageParams) {
           </div>
 
           <hr />
-          <div className="md:container py-8 space-y-3">
+          <div className="md:container py-6 space-y-3">
             <div className="flex gap-2 items-center text-md text-neutral-600 ">
               <Mic size={20} />
               <h2 className="text-lg">Created from recording</h2>

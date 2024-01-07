@@ -14,8 +14,8 @@ const PATHS = {
     icon: (
       <svg
         xmlns="http://www.w3.org/2000/svg"
-        width="28"
-        height="28"
+        width="26"
+        height="26"
         viewBox="0 0 31 31"
         fill="none"
         stroke="currentColor"
@@ -36,8 +36,10 @@ const PATHS = {
       <svg
         viewBox="0 0 39 25"
         fill="none"
+        width="26"
+        height="26"
         xmlns="http://www.w3.org/2000/svg"
-        className="w-[2.125rem] mb-1"
+        // className=" mb-1"
         stroke="currentColor"
       >
         <path
@@ -51,7 +53,7 @@ const PATHS = {
   },
   "/recordings": {
     name: "Recordings",
-    icon: <Mic className="flex-shrink-0 w-7 aspect-square" />,
+    icon: <Mic className="flex-shrink-0 w-[24px] aspect-square" />,
   },
 };
 
@@ -84,9 +86,9 @@ export const BottomBar = () => {
           />
         </div>
       )}
-      <div className="border-t py-2 bg-white">
+      <div className="border-t py-1 bg-white">
         <div
-          className="flex justify-between  bg-white mx-4 md:container"
+          className="grid grid-cols-3 gap-5 bg-white mx-4 md:container"
           style={{
             height: `${BOTTOM_BAR_HEIGHT}px`,
           }}
@@ -95,7 +97,7 @@ export const BottomBar = () => {
             <button
               key={path.name}
               className={cn(
-                "flex flex-col items-center w-28 flex-shrink-0 justify-center",
+                "flex flex-col items-center flex-shrink-0 justify-center",
                 pathname == key ? "text-blu hover:text-blu" : "text-gray-400"
               )}
               onClick={() => router.push(key)}

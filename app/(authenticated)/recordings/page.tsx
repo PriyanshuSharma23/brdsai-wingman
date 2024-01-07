@@ -25,9 +25,9 @@ export default function RecordingsPage() {
 
   return (
     <>
-      <div className="px-4 md:px-12 xl:px-20 space-y-2 md:space-y-4 text-neutral-600 pt-6">
+      <div className="px-4 md:px-12 xl:px-20 space-y-2 md:space-y-4 text-neutral-600 ">
         <h1
-          className="text-lg pt-5 flex items-center gap-1"
+          className="text-lg pt-6 flex items-center gap-1"
           style={{ fontWeight: 500 }}
         >
           <Mic size={20} />
@@ -45,7 +45,7 @@ export default function RecordingsPage() {
           </Button>
         </div>
 
-        <div className="space-y-4 py-2">
+        <div className="space-y-4 py-3">
           {recordingsQuery.isLoading &&
             new Array(5).fill(0).map((_, i) => {
               return <LoadingCard key={i} />;

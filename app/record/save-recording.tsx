@@ -66,10 +66,9 @@ export const SaveRecording = (props: SaveRecordingProps) => {
       return;
     }
 
-    let mime = props.recordingBlob.type
+    let mime = props.recordingBlob.type;
     let extension: string = "";
-    console.log({ mime })
-
+    console.log({ mime });
 
     createRecordingMutation.mutate(
       {
@@ -77,7 +76,7 @@ export const SaveRecording = (props: SaveRecordingProps) => {
         recordingFile: props.recordingBlob,
         duration: props.duration * 1000,
         recordingName: values.recordingName,
-        extension: `${extension}`
+        extension: `${extension}`,
       },
       {
         onSuccess: (data) => {
@@ -100,7 +99,7 @@ export const SaveRecording = (props: SaveRecordingProps) => {
     <>
       <div className="fixed inset-0 z-50 bg-white">
         <NavWrapper>
-          <div className="flex items-center text-primary gap-2">
+          <div className="flex items-center text-primary gap-2 py-2">
             <button className="translate-y-[2px]" onClick={props.closeWindow}>
               <ArrowLeft size={20} className="text-gray-500" />
             </button>
@@ -126,7 +125,10 @@ export const SaveRecording = (props: SaveRecordingProps) => {
                     render={({ field }) => {
                       return (
                         <FormItem>
-                          <FormLabel>Recording Name*</FormLabel>
+                          <FormLabel className="text-black">
+                            Recording Name
+                            <span className="text-[#EF4E4E]">*</span>
+                          </FormLabel>
                           <FormControl>
                             <Input
                               placeholder="Example: Consultation with John Doe"
@@ -144,7 +146,9 @@ export const SaveRecording = (props: SaveRecordingProps) => {
                     render={({ field }) => {
                       return (
                         <FormItem>
-                          <FormLabel>Patient*</FormLabel>
+                          <FormLabel className="text-black">
+                            Patient<span className="text-[#EF4E4E]">*</span>
+                          </FormLabel>
                           <FormControl>
                             <Select
                               onValueChange={field.onChange}

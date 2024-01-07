@@ -43,9 +43,9 @@ const PatientsPage = () => {
 
   return (
     <>
-      <div className="px-4 md:px-12 xl:px-20 space-y-2 md:space-y-4 text-neutral-600 pt-6">
+      <div className="px-4 md:px-12 xl:px-20 space-y-2 md:space-y-4 text-neutral-600">
         <h1
-          className="text-lg pt-5 flex items-center gap-2"
+          className="text-lg pt-6 flex items-center gap-2"
           style={{ fontWeight: 500 }}
         >
           {patient}
@@ -64,7 +64,7 @@ const PatientsPage = () => {
           </Button>
         </div>
 
-        <div className="space-y-3  py-5">
+        <div className="space-y-3 py-3">
           {patientsQuery.isLoading &&
             new Array(5).fill(0).map((_, i) => {
               return <LoadingCard key={i} />;
