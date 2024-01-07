@@ -38,8 +38,14 @@ export function AddPatientModal({
   onOpenChange,
   closeModal,
 }: AddPatientModalProps) {
+  const defaultValues = {
+    mrn: "",
+    name: "",
+  };
+
   const form = useForm<z.infer<typeof addPatientSchema>>({
     resolver: zodResolver(addPatientSchema),
+    defaultValues,
   });
 
   const createPatientMutation = useCreatePatientMutation();
@@ -53,6 +59,9 @@ export function AddPatientModal({
       {
         onSuccess() {
           toast.success("Patient created");
+          form.reset({
+            ...defaultValues
+          });
           closeModal();
         },
       },
