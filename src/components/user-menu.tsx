@@ -12,11 +12,14 @@ import {
   DropdownMenuTrigger,
   DropdownMenuItem,
 } from "./ui/dropdown-menu";
+import { useRouter } from "next/navigation";
 
 type UserMenuProps = {};
 export const UserMenu = (props: UserMenuProps) => {
   const logout = useStore((s) => s.logout);
   const user = useStore((s) => s.user);
+
+  const router = useRouter();
 
   const [userName, setUserName] = useState<string | null>(null);
 
@@ -44,7 +47,10 @@ export const UserMenu = (props: UserMenuProps) => {
           My Account
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
-        <DropdownMenuItem className="text-red-400" onClick={logout}>
+        <DropdownMenuItem className="text-red-400" onClick={() => {
+          logout();
+          router.replace("/auth")
+        }}>
           Log Out <LogOut size={18} className="ml-2" />
         </DropdownMenuItem>
       </DropdownMenuContent>
