@@ -1,6 +1,7 @@
 import request from "@/lib/customAxios";
 import { Recording } from "@/types/Recording";
 import { useQuery } from "@tanstack/react-query";
+import { useStore } from "@/store/store";
 
 type UseRecordingsByPatientProps = {
   patientId: number;
@@ -8,6 +9,8 @@ type UseRecordingsByPatientProps = {
 export const useRecordingsByPatient = ({
   patientId,
 }: UseRecordingsByPatientProps) => {
+  const { user } = useStore();
+
   return useQuery({
     queryKey: ["recording", "by-patient", patientId],
     queryFn: async (params) => {
@@ -40,5 +43,6 @@ export const useRecordingsByPatient = ({
       }) as Recording[];
     },
     refetchOnWindowFocus: false,
+    enabled: !!user,
   });
 };

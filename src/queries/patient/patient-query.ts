@@ -1,11 +1,13 @@
 import request from "@/lib/customAxios";
 import { Patient } from "@/types/Patient";
 import { useQuery } from "@tanstack/react-query";
+import { useStore } from "@/store/store";
 
 type UsePatientQueryProps = {
   patientId: number;
 };
 export const usePatientQuery = ({ patientId }: UsePatientQueryProps) => {
+  const { user } = useStore();
   return useQuery({
     queryKey: ["patients", patientId],
     queryFn: async (params) => {
@@ -22,6 +24,6 @@ export const usePatientQuery = ({ patientId }: UsePatientQueryProps) => {
       return resp.data as Patient;
     },
     refetchOnWindowFocus: false,
-    enabled: patientId !== -1,
+    enabled: !!user && patientId !== -1,
   });
 };

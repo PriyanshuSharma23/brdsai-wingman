@@ -1,8 +1,10 @@
 import request from "@/lib/customAxios";
+import { useStore } from "@/store/store";
 import { Patient } from "@/types/Patient";
 import { useQuery } from "@tanstack/react-query";
 
 export const useAllPatientQuery = () => {
+  const { user } = useStore();
   return useQuery({
     queryKey: ["patients"],
     queryFn: async () => {
@@ -27,5 +29,6 @@ export const useAllPatientQuery = () => {
       return sorted as Patient[];
     },
     refetchOnWindowFocus: false,
+    enabled: !!user,
   });
 };

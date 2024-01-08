@@ -1,12 +1,14 @@
 import request from "@/lib/customAxios";
 import { Note } from "@/types/Note";
 import { useQuery } from "@tanstack/react-query";
+import { useStore } from "@/store/store";
 
 type UseNotesByPatientProps = {
   patientId: number;
 };
 
 export const useNotesByPatient = ({ patientId }: UseNotesByPatientProps) => {
+  const { user } = useStore();
   return useQuery({
     queryKey: ["notes", "by-patient", patientId],
     queryFn: async (params) => {
@@ -35,5 +37,6 @@ export const useNotesByPatient = ({ patientId }: UseNotesByPatientProps) => {
       return sorted as Note[];
     },
     refetchOnWindowFocus: false,
+    enabled: !!user,
   });
 };

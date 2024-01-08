@@ -3,6 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import { Transcript } from "@/types/Transcript";
 import { useEffect, useRef, useState } from "react";
 import { DEFAULT_RETRY_INTERVAL } from "@/lib/constants";
+import { useStore } from "@/store/store";
 
 type UseTranscriptByRecordingQueryProps = {
   recordingId: number;
@@ -11,6 +12,7 @@ export const useTranscriptByRecordingQuery = (
   props: UseTranscriptByRecordingQueryProps
 ) => {
   const [refetchInterval, setRefetchInterval] = useState<number | false>(DEFAULT_RETRY_INTERVAL);
+  const { user } = useStore();
 
   const transcriptQuery = useQuery({
     queryKey: ["transcript", "by-recording", props.recordingId],
@@ -31,6 +33,7 @@ export const useTranscriptByRecordingQuery = (
     },
     refetchInterval,
     refetchOnWindowFocus: false,
+    enabled: !!user,
   });
 
   useEffect(() => {

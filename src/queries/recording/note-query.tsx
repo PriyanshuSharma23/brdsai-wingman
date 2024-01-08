@@ -4,12 +4,14 @@ import { isResponseOk } from "@/lib/utils";
 import { Note } from "@/types/Note";
 import { useQuery } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
+import { useStore } from "@/store/store";
 
 type UseNoteQueryProps = {
   noteId: string;
 };
 export const useNoteQuery = ({ noteId }: UseNoteQueryProps) => {
   const [refetchInterval, setRefetchInterval] = useState<number | false>(DEFAULT_RETRY_INTERVAL);
+  const { user } = useStore();
 
   let noteQuery = useQuery({
     queryKey: ["notes", noteId],
@@ -28,6 +30,7 @@ export const useNoteQuery = ({ noteId }: UseNoteQueryProps) => {
       return response.data as Note;
     },
     refetchInterval,
+    enabled: !!user,
     refetchOnWindowFocus: false,
   });
 
